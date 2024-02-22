@@ -1,0 +1,13 @@
+a.customNavLink.nav-link {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: #015fff 0.2rem solid transparent;
+}
+
+a.customNavLink.nav-link:hover {
+    border-bottom: #015fff 0.2rem solid;
+}
+
+a.customNavLink.nav-link.active {
+    border-bottom: #015fff 0.2rem solid;
+}
