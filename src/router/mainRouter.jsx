@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../pages/Layout';
-import MainPage from '../pages/MainPage';
-import QAPage from '../pages/QAPage';
-import LoginPage from '../pages/LoginPage';
+import MainPage from '../pages/main/MainPage';
+import QAPage from '../pages/qa/QAPage';
+import LoginPage from '../pages/login/LoginPage';
 
 export const mainRouter = [
     {

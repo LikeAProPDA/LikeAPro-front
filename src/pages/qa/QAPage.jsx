@@ -1,5 +1,5 @@
 import { Container } from 'react-bootstrap';
-import CustomNavbar from '../components/common/nav/CustomNavbar';
+import CustomNavbar from '../../components/common/nav/CustomNavbar';
 
 const QAPage = () => {
     return (
