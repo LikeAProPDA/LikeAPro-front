@@ -1,9 +1,15 @@
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 
 const LoginPage = () => {
     return (
         <>
-            <Container>로그인 페이지</Container>
+            <Container>
+                <Row>
+                    <Col md={12}>
+                        <h2 className="text-center">로그인</h2>
+                    </Col>
+                </Row>
+            </Container>
         </>
     );
 };
