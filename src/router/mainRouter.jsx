@@ -3,6 +3,7 @@ import Layout from '../pages/Layout';
 import MainPage from '../pages/main/MainPage';
 import QAPage from '../pages/qa/QAPage';
 import LoginPage from '../pages/login/LoginPage';
+import SignUpPage from '../pages/signUp/SignUpPage';
 
 export const mainRouter = [
     {
@@ -22,6 +23,11 @@ export const mainRouter = [
             {
                 path: '/login',
                 element: <LoginPage />,
+                index: true,
+            },
+            {
+                path: '/sign-up',
+                element: <SignUpPage />,
                 index: true,
             },
         ],
