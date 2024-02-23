@@ -1,9 +1,9 @@
 import instance from "./baseApi";
 
 export const getQAboard = async () => {
-  const response = await instance.get("/qas");
+  const {data} = await instance.get("/qas");
 
-  return response;
+  return data;
 };
 
 export const getaQA = async (qaId) => {
