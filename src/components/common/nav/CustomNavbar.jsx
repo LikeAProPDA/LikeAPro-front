@@ -25,7 +25,7 @@ const CustomNavbar = () => {
 
     return (
         <Navbar expand="md" className="bg-white py-0">
-            <Container>
+            <Container className={width < 767 ? 'py-2' : false}>
                 <Navbar.Brand href="/" className="text-primary fw-bold">
                     <img src={logo} width="28" height="28" className="d-inline-block align-top" />
                     {'  '} Like A Pro
@@ -34,17 +34,26 @@ const CustomNavbar = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav variant={width < 767 ? false : 'underline'} defaultActiveKey="/" className="me-auto">
                         <Nav.Item>
-                            <Nav.Link eventKey="/" as={Link} to="/" className="customNavLink">
+                            <Nav.Link eventKey="/" as={Link} to="/" className={width < 767 ? false : 'customNavLink'}>
                                 메인
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="/qas" as={Link} to="/qas" className="customNavLink">
+                            <Nav.Link
+                                eventKey="/qas"
+                                as={Link}
+                                to="/qas"
+                                className={width < 767 ? false : 'customNavLink'}
+                            >
                                 지식 투자
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="/ranking" href="#ranking" className="customNavLink">
+                            <Nav.Link
+                                eventKey="/ranking"
+                                href="#ranking"
+                                className={width < 767 ? false : 'customNavLink'}
+                            >
                                 랭킹
                             </Nav.Link>
                         </Nav.Item>
