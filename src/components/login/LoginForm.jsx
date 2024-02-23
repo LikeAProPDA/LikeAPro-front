@@ -4,12 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import CustomAlert from '../common/alert/CustomAlert';
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '../../store/userReducer';
+import validator from 'validator';
 
 const LoginForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [validated, setValidated] = useState(false);
-    const [onLoad, setOnLoad] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPasswordInitAlert, setShowPasswordInitAlert] = useState(false);
@@ -20,9 +20,6 @@ const LoginForm = () => {
     }, []);
 
     const onPasswordChange = useCallback((password) => {
-        if (onLoad) {
-            setOnLoad(false);
-        }
         setPassword(password);
     }, []);
 
@@ -54,6 +51,7 @@ const LoginForm = () => {
                     <Form.Label>이메일</Form.Label>
                     <Form.Control
                         required
+                        isInvalid={email.length > 0 && !validator.isEmail(email)}
                         type="email"
                         placeholder="이메일을 입력해주세요"
                         value={email}
@@ -67,7 +65,7 @@ const LoginForm = () => {
                     <Form.Label>비밀번호</Form.Label>
                     <Form.Control
                         required
-                        isInvalid={!onLoad && password.length < 8}
+                        isInvalid={password.length > 0 && password.length < 8}
                         type="password"
                         placeholder="비밀번호를 입력해주세요"
                         onChange={(e) => {

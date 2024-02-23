@@ -60,7 +60,7 @@ const CustomNavbar = () => {
                     </Nav>
                     {isLogin ? (
                         <>
-                            <h6 className="my-auto me-4">
+                            <h6 className="my-auto me-4 py-2 fw-bold">
                                 {user.nickname} <small>님</small>{' '}
                             </h6>
                             <PrimaryButton text="로그아웃" minWidth={120} onClick={logoutClick} />
