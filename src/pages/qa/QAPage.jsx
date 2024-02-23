@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Badge, Container, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import qaApi from '../../lib/apis/qaApi';
-import CustomNavbar from '../../components/common/nav/CustomNavbar';
+// import CustomNavbar from '../../components/common/nav/CustomNavbar';
 
 const QAPage = () => {
     const [qas, setQas] = useState([]);
