@@ -1,7 +1,29 @@
-import { Container } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { Badge, Container, ListGroup } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import qaApi from '../../lib/apis/qaApi';
 import CustomNavbar from '../../components/common/nav/CustomNavbar';
 
 const QAPage = () => {
+    const [qas, setQas] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchQAs = async () => {
+            try {
+                setLoading(true);
+                const data = await qaApi.getQAboard();
+                setQas(data.qas);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching QAs:", error);
+                setLoading(false);
+            }
+        };
+
+        fetchQAs();
+    }, []);
+
     return (
         <Container>
             <h3>지식투자 리스트</h3>
