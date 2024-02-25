@@ -7,6 +7,8 @@ const initialState = {
     loginFetchStatus: 'done',
 };
 
+
+
 export const fetchUser = createAsyncThunk('user/fetchUser', async ({ email, password }, thunkAPI) => {
     const response = await login({
         email: email,
