@@ -7,7 +7,7 @@ export const rootReducer = combineReducers({
 });
 
 const store = configureStore({
-  reducer: userReducer,
+    reducer: rootReducer,
 });
 
 export default store;
