@@ -104,14 +104,12 @@ const LoginForm = () => {
             <CustomAlert
                 setShow={setShowPasswordInitAlert}
                 show={showPasswordInitAlert}
-                onClose={() => setShowPasswordInitAlert(false)}
                 heading="아직 지원하지 않는 기능"
                 content="아직 비밀번호 초기화는 지원하지 않는 기능입니다."
             />
             <CustomAlert
                 setShow={setShowLoginFailAlert}
                 show={showLoginFailAlert}
-                onClose={() => setShowLoginFailAlert(false)}
                 variant="danger"
                 heading="로그인 실패"
                 content="아이디 혹은 비밀번호를 확인해주세요"

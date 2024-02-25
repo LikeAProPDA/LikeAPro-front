@@ -11,12 +11,16 @@ import './customNavbar.css';
 const CustomNavbar = () => {
     const width = useWidth();
     const dispatch = useDispatch();
-    const isLogin = useSelector((state) => state.isLogin);
-    const user = useSelector((state) => state.user);
+    const isLogin = useSelector((state) => state.user.isLogin);
+    const user = useSelector((state) => state.user.user);
     const navigate = useNavigate();
 
     const loginClick = useCallback(() => {
         navigate('/login');
+    }, []);
+
+    const signUpClick = useCallback(() => {
+        navigate('/sign-up');
     }, []);
 
     const logoutClick = useCallback(() => {
@@ -73,7 +77,7 @@ const CustomNavbar = () => {
                                 style={{ marginRight: '10px' }}
                                 onClick={loginClick}
                             />
-                            <PrimaryButton text="회원가입" minWidth={120} />
+                            <PrimaryButton text="회원가입" minWidth={120} onClick={signUpClick} />
                         </>
                     )}
                 </Navbar.Collapse>

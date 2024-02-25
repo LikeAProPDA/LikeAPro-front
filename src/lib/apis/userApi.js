@@ -18,8 +18,55 @@ export const logout = async () => {
     return response.data;
 };
 
+export const isDuplicateNickname = async (nickname) => {
+    const { data } = await instance.get('/users/duplicate-nickname', { params: { nickname: nickname } });
+
+    return data;
+};
+
+export const sendVerifyEmail = async (email) => {
+    const { data } = await instance.post(
+        '/users/verify-email',
+        {},
+        {
+            params: {
+                email: email,
+            },
+        }
+    );
+
+    return data;
+};
+
+export const isVerifyEmail = async (email, verifyCode) => {
+    const { data } = await instance.get('/users/verify-email', { params: { email: email, code: verifyCode } });
+
+    return data;
+};
+
+export const isDuplicateBackjoonId = async (backjoonId) => {
+    const { data } = await instance.get('/users/duplicate-backjoonid', { params: { backjoonid: backjoonId } });
+
+    return data;
+};
+
+export const signUp = async (nickname, email, password, backjoonId) => {
+    const { data } = await instance.post('/users/sign-up', {
+        nickname: nickname,
+        password: password,
+        email: email,
+        backjoonId: backjoonId,
+    });
+
+    return data;
+};
+
 export default {
     login,
     autoLogin,
     logout,
+    isDuplicateNickname,
+    isDuplicateBackjoonId,
+    sendVerifyEmail,
+    isVerifyEmail,
 };
