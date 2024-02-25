@@ -26,7 +26,9 @@ const QAPage = () => {
 
     return (
         <Container>
-            <h3>지식투자 리스트</h3>
+            <br />
+            <h5 className="lh-base fw-bold">✨지식투자 리스트</h5>
+
 
             <ListGroup>
                 {loading ? (
@@ -53,6 +55,7 @@ const QAPage = () => {
                         </Link>
                     ))
                 )}
+
             </ListGroup>
         </Container>
     );
