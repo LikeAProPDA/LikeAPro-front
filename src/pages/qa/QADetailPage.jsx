@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import qaApi from '../../lib/apis/qaApi';
 import commentApi from '../../lib/apis/commentApi';
 import { Editor } from '../../components/editor';
+import ReactMarkdown from "react-markdown";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 
@@ -13,7 +14,6 @@ const QADetailPage = () => {
   const [qa, setQA] = useState({});
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editorContent, setEditorContent] = useState("");
   const [showEditor, setShowEditor] = useState(false);
   const editorRef = useRef(null);
 
@@ -43,14 +43,6 @@ const QADetailPage = () => {
     fetchComments();
   }, [id]);
 
-  const handlePostQA = async () => {
-    try {
-      await commentApi.uploadCommentForQA(id, editorContent);
-      window.location.reload();
-    } catch (error) {
-      console.error("Error posting QA:", error);
-    }
-  };
 
   const handleEditorChange = (value) => {
     setEditorContent(value);
@@ -105,7 +97,7 @@ const QADetailPage = () => {
                 previewStyle='vertical'
                 onChange={handleEditorChange}
               />
-              <Button onClick={handlePostQA} style={{ float: 'right', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>등록</Button>
+              
               <Button onClick={handleSave} style={{ float: 'right', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>Save</Button>
             </>
           )}
@@ -123,7 +115,11 @@ const QADetailPage = () => {
               }}
             >
               {/* markdown 형식의 내용을 HTML로 렌더링 */}
-              <div dangerouslySetInnerHTML={{ __html: comment.content }} />
+              <ReactMarkdown components={{
+                a: (props) => <a target="_blank" style={{ color: "red" }} {...props} />,
+              }}>
+                {comment.content}
+              </ReactMarkdown>
               <p>작성자: {comment.user.nickname}</p>
             </Card>
           ))}
@@ -134,3 +130,4 @@ const QADetailPage = () => {
 };
 
 export default QADetailPage;
+
