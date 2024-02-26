@@ -37,7 +37,7 @@ const QAPage = () => {
                     qas.map((qa, index) => (
                         <Link
                             key={qa._id}
-                            to={`/qa/${qa._id}`} // Assuming there's a route for individual QA pages
+                            to={`/qas/${qa.id}`} // Assuming there's a route for individual QA pages
                             className="text-decoration-none"
                         >
                             <ListGroup.Item action className="d-flex justify-content-between align-items-start">
