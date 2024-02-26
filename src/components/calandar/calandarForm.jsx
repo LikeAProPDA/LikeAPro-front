@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import { Card, CardBody } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ const CalandarForm = () => {
   };
 
   const handleEventClick = (arg) => {
-    console.log(arg.event._def);
+    // console.log(arg.event._def);
     alert(arg.event._def.title);
   };
 
