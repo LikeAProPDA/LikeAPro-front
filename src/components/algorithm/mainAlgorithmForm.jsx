@@ -1,29 +1,43 @@
 import { Card, Col, Image, Row } from "react-bootstrap";
 
 const MainAlgorithmForm = () => {
-  //   const listStyle = {
-  //     backgroundColor: "#ffcc00", // 배경색을 원하는 색상으로 설정
-  //   };
   return (
-    <div>
-      <Card className="custom-bg my-card mt-3">
+    <>
+      <Card
+        className="custom-bg my-card mt-3"
+        style={{
+          borderRadius: "15px",
+          backgroundColor: "#fff",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Card.Body className="item1 px-5 py-4">
           <Row>
-            <Col xl xs md="6">
+            <Col xl={6} xs={6} md={6}>
               <Card.Text style={{ fontSize: "20px", fontWeight: "bold" }}>
-                알고리즘 1
+                피보나치 수 5
               </Card.Text>
-              <Card.Subtitle className="mb-2 text-muted">
-                #구현 #dfs #bfs
+              <Card.Subtitle className="mb-2 text-muted text-truncate">
+                #구현 #다이나믹 프로그래밍
               </Card.Subtitle>
             </Col>
-            <Col xl xs md="3">
+            <Col
+              xl={3}
+              xs={3}
+              md={3}
+              className="d-flex align-items-center justify-content-center"
+            >
               <Image
-                src="https://d2gd6pc034wcta.cloudfront.net/tier/1.svg"
+                src="https://d2gd6pc034wcta.cloudfront.net/tier/4.svg"
                 style={{ width: 50 }}
               ></Image>
             </Col>
-            <Col xl xs md="3" className="d-flex justify-content-end">
+            <Col
+              xl={3}
+              xs={3}
+              md={3}
+              className="d-flex justify-content-end align-items-center"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="64"
@@ -40,24 +54,41 @@ const MainAlgorithmForm = () => {
         </Card.Body>
       </Card>
 
-      <Card className="custom-bg my-card mt-3">
+      <Card
+        className="custom-bg my-card mt-3"
+        style={{
+          borderRadius: "15px",
+          backgroundColor: "#fff",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Card.Body className="item2 px-5 py-4">
           <Row>
-            <Col xl xs md="6">
+            <Col xl={6} xs={6} md={6}>
               <Card.Text style={{ fontSize: "20px", fontWeight: "bold" }}>
-                알고리즘 2
+                최고의 팀 만들기
               </Card.Text>
-              <Card.Subtitle className="mb-2 text-muted">
-                #구현 #dfs #bfs
+              <Card.Subtitle className="mb-2 text-muted text-truncate">
+                #다이나믹 프로그래밍
               </Card.Subtitle>
             </Col>
-            <Col xl xs md="3">
+            <Col
+              xl={3}
+              xs={3}
+              md={3}
+              className="d-flex align-items-center justify-content-center"
+            >
               <Image
-                src="https://d2gd6pc034wcta.cloudfront.net/tier/11.svg"
+                src="https://d2gd6pc034wcta.cloudfront.net/tier/12.svg"
                 style={{ width: 50 }}
               ></Image>
             </Col>
-            <Col xl xs md="3" className="d-flex justify-content-end">
+            <Col
+              xl={3}
+              xs={3}
+              md={3}
+              className="d-flex justify-content-end align-items-center"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="64"
@@ -74,7 +105,7 @@ const MainAlgorithmForm = () => {
           </Row>
         </Card.Body>
       </Card>
-    </div>
+    </>
   );
 };
 
