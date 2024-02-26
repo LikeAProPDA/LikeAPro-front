@@ -4,6 +4,7 @@ import MainPage from '../pages/main/MainPage';
 import QAPage from '../pages/qa/QAPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignUpPage from '../pages/signUp/SignUpPage';
+import QADetailPage from '../pages/qa/QADetailPage';
 
 export const mainRouter = [
     {
@@ -28,6 +29,11 @@ export const mainRouter = [
             {
                 path: '/sign-up',
                 element: <SignUpPage />,
+                index: true,
+            },
+            {
+                path: '/qas/:id',
+                element: <QADetailPage />,
                 index: true,
             },
         ],
