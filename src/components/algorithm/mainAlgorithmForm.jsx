@@ -5,8 +5,15 @@ const MainAlgorithmForm = () => {
   //     backgroundColor: "#ffcc00", // 배경색을 원하는 색상으로 설정
   //   };
   return (
-    <div>
-      <Card className="custom-bg my-card mt-3">
+    <>
+      <Card
+        className="custom-bg my-card mt-3"
+        style={{
+          borderRadius: "15px",
+          backgroundColor: "#fff",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Card.Body className="item1 px-5 py-4">
           <Row>
             <Col xl xs md="6">
@@ -40,7 +47,14 @@ const MainAlgorithmForm = () => {
         </Card.Body>
       </Card>
 
-      <Card className="custom-bg my-card mt-3">
+      <Card
+        className="custom-bg my-card mt-3"
+        style={{
+          borderRadius: "15px",
+          backgroundColor: "#fff",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Card.Body className="item2 px-5 py-4">
           <Row>
             <Col xl xs md="6">
@@ -74,7 +88,7 @@ const MainAlgorithmForm = () => {
           </Row>
         </Card.Body>
       </Card>
-    </div>
+    </>
   );
 };
 
