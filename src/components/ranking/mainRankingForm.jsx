@@ -24,9 +24,6 @@ const MainRankingForm = () => {
             autoHeight
             loop={true}
             autoplay={{ delay: 2000, disableOnInteraction: true }}
-            onAutoplay={(swiper) => {
-              console.log(swiper);
-            }}
           >
             <SwiperSlide style={{ display: "flex", alignItems: "center" }}>
               <Col md={1} lg={1}>
