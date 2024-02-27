@@ -2,10 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { Container, Button, Card } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import qaApi from "../../lib/apis/qaApi";
+import qaApi from '../../lib/apis/qaApi';
 import rankingApi from "../../lib/apis/rankingApi";
-import commentApi from "../../lib/apis/commentApi";
-import { Editor } from "../../components/editor";
+import commentApi from '../../lib/apis/commentApi';
+import { Editor } from '../../components/editor';
 import ReactMarkdown from "react-markdown";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
@@ -65,8 +65,14 @@ const QADetailPage = () => {
   };
 
   const handleEditQA = async (qaId) => {
-    setEditorMode("edit");
+    try {
+      setEditCommentContent(qa.qa.content); // 게시물 내용을 수정 창에 표시
+      setEditorMode('edit');
+    } catch (error) {
+      console.error("Error editing post:", error);
+    }
   };
+
 
   const handleDeleteQA = async (qaId) => {
     try {
@@ -125,15 +131,14 @@ const QADetailPage = () => {
     setSelectedCommentId(commentId);
     try {
       await commentApi.updateCommentAcceptance(id, commentId, true);
-      const updatedComments = comments.map((comment) => ({
+      await commentApi.updateCommentAcceptance(id, commentId, true);
+      const updatedComments = comments.map(comment => ({
         ...comment,
         isAccepted: comment.id === commentId,
       }));
       setComments(updatedComments);
       localStorage.setItem("selectedCommentId", commentId);
-      const selectedComment = updatedComments.find(
-        (comment) => comment.id === commentId
-      );
+      const selectedComment = updatedComments.find(comment => comment.id === commentId);
       if (selectedComment) {
         await rankingApi.postScore(5);
         console.log(selectedComment.user.id);
@@ -265,30 +270,12 @@ const QADetailPage = () => {
                 onChange={handleEditorChange}
               />
 
-              <Button
-                onClick={handleSave}
-                style={{
-                  marginRight: "10px",
-                  borderColor: "blue",
-                  color: "blue",
-                  backgroundColor: "transparent",
-                }}
-              >
-                Save
-              </Button>
-              <Button
-                onClick={handleCancel}
-                style={{
-                  marginRight: "10px",
-                  borderColor: "red",
-                  color: "red",
-                  backgroundColor: "transparent",
-                }}
-              >
-                Cancel
-              </Button>
+              <Button onClick={handleSave} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>Save</Button>
+              <Button onClick={handleCancel} style={{ marginRight: '10px', borderColor: 'red', color: 'red', backgroundColor: 'transparent' }}>Cancel</Button>
+
             </>
           )}
+
 
           <h3
             style={{
@@ -305,17 +292,14 @@ const QADetailPage = () => {
             <Card
               key={index}
               style={{
-                margin: "10px 0",
-                padding: "10px 10px",
-                borderRadius: "15px",
-                backgroundColor: isSelected(comment.id)
-                  ? "#DFF0D8"
-                  : comment.isAccepted
-                  ? "#DFF0D8"
-                  : "#fff",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                display: "flex",
-                flexDirection: "column",
+                margin: '10px 0',
+                padding: '10px 10px',
+                borderRadius: '15px',
+                backgroundColor: isSelected(comment.id) ? '#DFF0D8' : (comment.isAccepted ? '#DFF0D8' : '#fff'),
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                display: 'flex',
+                flexDirection: 'column'
+
               }}
             >
               <div style={{ marginBottom: "10px" }}>
@@ -330,34 +314,15 @@ const QADetailPage = () => {
                 </ReactMarkdown>
                 <p>작성자: {comment.user.nickname}</p>
               </div>
-
               <div>
                 {shouldShowEditButtons(comment.user.id) && (
-                  <Button
-                    onClick={() => handleEditComment(comment.id)}
-                    style={{
-                      marginRight: "10px",
-                      borderColor: "black",
-                      color: "black",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    수정
-                  </Button>
+                  <Button onClick={() => handleEditComment(comment.id)} style={{ marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
                 )}
                 {shouldShowEditButtons(comment.user.id) && (
-                  <Button
-                    onClick={() => handleDeleteComment(comment.id)}
-                    style={{
-                      borderColor: "black",
-                      color: "black",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    삭제
-                  </Button>
+                  <Button onClick={() => handleDeleteComment(comment.id)} style={{ borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
                 )}
               </div>
+
               {!allCommentsAccepted && (
                 <Button
                   onClick={() => handleSelectComment(comment.id)}
