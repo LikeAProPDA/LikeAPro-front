@@ -1,4 +1,3 @@
-import { Container } from "react-bootstrap";
 import RecommendProblems from "../../components/beakjoon/RecommendProblems";
 import { Col, Container, Row } from "react-bootstrap";
 import CalandarForm from "../../components/calandar/calandarForm";
@@ -11,7 +10,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay } from "swiper/modules";
-
 
 const MainPage = () => {
   return (
