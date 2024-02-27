@@ -7,7 +7,6 @@ import { logoutUser } from "../../../store/userReducer";
 import { useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./customNavbar.css";
-import Cookies from "js-cookie";
 
 const CustomNavbar = () => {
   const width = useWidth();
@@ -25,26 +24,7 @@ const CustomNavbar = () => {
   }, []);
 
   const logoutClick = useCallback(() => {
-    dispatch(logoutUser());
-
-    // 모든 쿠키를 문자열로 가져옴
-    const allCookies = document.cookie;
-
-    // 문자열을 쿠키 배열로 분할
-    const cookiesArray = allCookies.split("; ");
-
-    // "problem_"으로 시작하는 쿠키 필터링
-    const problemCookies = cookiesArray.filter((cookie) =>
-      cookie.startsWith("problem_")
-    );
-
-    // 문제 쿠키 삭제
-    problemCookies.forEach((cookie) => {
-      const cookieName = cookie.split("=")[0]; // 쿠키 이름 가져오기
-      Cookies.remove(cookieName); // js-cookie를 사용하여 쿠키 제거
-      Cookies.remove("isRecommend");
-    });
-  }, []);
+    dispatch(logoutUser())},[]);
 
   return (
     <Navbar expand="md" className="bg-white py-0">
@@ -93,6 +73,16 @@ const CustomNavbar = () => {
                 랭킹
               </Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+                <Nav.Link
+                    eventKey="/playgrounds"
+                    as={Link}
+                    to="/playgrounds"
+                    className={width < 767 ? false : 'customNavLink'}
+                >
+                    플레이그라운드
+                </Nav.Link>
+            </Nav.Item>
           </Nav>
           {isLogin ? (
             <>
@@ -125,6 +115,6 @@ const CustomNavbar = () => {
       </Container>
     </Navbar>
   );
-};
+}
 
 export default CustomNavbar;

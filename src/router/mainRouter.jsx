@@ -4,6 +4,9 @@ import MainPage from '../pages/main/MainPage';
 import QAPage from '../pages/qa/QAPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignUpPage from '../pages/signUp/SignUpPage';
+import PlayGroundEditorPage from '../pages/playground/PlaygroundEditorPage';
+import PlayGroundPage from '../pages/playground/PlaygroundPage';
+import PlaygroundDetailPage from '../pages/playground/PlaygroundDetailPage';
 import QADetailPage from '../pages/qa/QADetailPage';
 import RankingPage from "../pages/ranking/RankingPage";
 
@@ -31,6 +34,26 @@ export const mainRouter = [
                 path: '/sign-up',
                 element: <SignUpPage />,
                 index: true,
+            },
+            {
+                path: '/playgrounds',
+                children: [
+                    {
+                        path: '',
+                        element: <PlayGroundPage />,
+                        index: true,
+                    },
+                    {
+                        path: 'editor',
+                        element: <PlayGroundEditorPage />,
+                        index: true,
+                    },
+                    {
+                        path: ':id',
+                        element: <PlaygroundDetailPage />,
+                        index: true,
+                    },
+                ],
             },
             {
                 path: '/qas/:id',
