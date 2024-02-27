@@ -21,7 +21,7 @@ const MainRankingForm = () => {
 
   return (
     <Card
-      className="custom-bg my-card mt-3 px-4"
+      className="custom-bg my-card mt-3"
       style={{
         borderRadius: "15px",
         backgroundColor: "#fff",

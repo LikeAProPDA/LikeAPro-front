@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Pagination } from "react-bootstrap";
 import { getRanking } from "../../lib/apis/rankingApi";
 import { v4 as uuidv4 } from "uuid";

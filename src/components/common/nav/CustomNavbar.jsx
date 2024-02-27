@@ -63,9 +63,7 @@ const CustomNavbar = () => {
           >
             <Nav.Item>
               <Nav.Link
-                eventKey="/"
-                as={Link}
-                to="/"
+                href="/"
                 className={width < 767 ? false : "customNavLink"}
               >
                 메인

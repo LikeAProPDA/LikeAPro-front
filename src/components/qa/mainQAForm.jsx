@@ -1,5 +1,5 @@
 import { Col, Row, Image } from "react-bootstrap";
-import QAMainImg from "../../assets/images/qaMainImg.png";
+import QAMainImg from "../../assets/images/QAMainImage.png";
 
 const MainQAForm = () => {
   return (
