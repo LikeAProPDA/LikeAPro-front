@@ -10,8 +10,8 @@ export const uploadCommentForQA = async (qaId, content) => {
   return response.data;
 };
 
-export const updateCommentForQA = async (commentId, content) => {
-  const response = await instance.put(`/qas/comments/${commentId}`, {
+export const updateCommentForQA = async (qaId, commentId, content) => {
+  const response = await instance.put(`/qas/${qaId}/comments/${commentId}`, {
     content,
   });
   return response.data;
@@ -21,10 +21,17 @@ export const deleteCommentForQA = async (commentId) => {
   const response = await instance.delete(`/qas/comments/${commentId}`);
   return response.data;
 };
+export const updateCommentAcceptance = async (qaId, commentId, isAccepted) => {
+  const response = await instance.post(`/qas/${qaId}/comments/${commentId}`, {
+    isAccepted,
+  });
+  return response.data;
+};
 
 export default {
   getCommentsForQA,
   uploadCommentForQA,
   updateCommentForQA,
   deleteCommentForQA,
+  updateCommentAcceptance,
 };
