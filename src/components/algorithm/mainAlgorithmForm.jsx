@@ -99,9 +99,19 @@ const MainAlgorithmForm = () => {
           <Card.Body key={uuidv4()} className="item1 px-5 py-4">
             <Row>
               <Col xl={6} xs={6} md={6}>
-                <Card.Text style={{ fontSize: "20px", fontWeight: "bold" }}>
+                <Card.Title
+                  href={problem.link}
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                  className="pt-2"
+                  // eslint-disable-next-line no-unused-vars
+                  onClick={(e) => window.open(problem.link)}
+                >
                   {problem.algoName}
-                </Card.Text>
+                </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted text-truncate">
                   {problem.tags.map((tag) => (
                     <span key={uuidv4()}>#{tag}</span>
