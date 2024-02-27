@@ -20,6 +20,10 @@ const CustomNavbar = () => {
     navigate("/login");
   }, []);
 
+  const signUpClick = useCallback(() => {
+    navigate("/sign-up");
+  }, []);
+
   const logoutClick = useCallback(() => {
     dispatch(logoutUser());
 
@@ -109,7 +113,12 @@ const CustomNavbar = () => {
                 style={{ marginRight: "10px" }}
                 onClick={loginClick}
               />
-              <PrimaryButton text="회원가입" minWidth={120} />
+              <PrimaryButton
+                text="회원가입"
+                minWidth={120}
+                style={{ marginRight: "10px" }}
+                onClick={signUpClick}
+              />
             </>
           )}
         </Navbar.Collapse>

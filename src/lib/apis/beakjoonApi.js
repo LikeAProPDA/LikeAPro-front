@@ -1,13 +1,22 @@
 import instance from "./baseApi";
 
-export const getProblems = async (count) => {
+export const getProblemsUser = async (count) => {
   const response = await instance.get(`/bojs/recommend?num=${count}`);
 
   return response.data;
 };
 
-export const getIsSolved = async (problemNum) => {
-  const response = await instance.post(`/bojs/${problemNum}`);
+export const getProblems = async (count) => {
+  const response = await instance.get(`/bojs/recommend/random?num=${count}`);
+
+  return response.data;
+};
+
+export const getIsSolved = async (problemNum, problemId) => {
+  const response = await instance.post(`/bojs/check`, {
+    problemNum,
+    problemId,
+  });
 
   return response.data;
 };
