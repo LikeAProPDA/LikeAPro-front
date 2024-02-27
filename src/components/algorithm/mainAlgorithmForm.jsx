@@ -22,6 +22,7 @@ const MainAlgorithmForm = () => {
           const data = await getProblems(2);
           setProblems(data.result);
         }
+
       } catch (error) {
         console.error("Error:", error);
       }
