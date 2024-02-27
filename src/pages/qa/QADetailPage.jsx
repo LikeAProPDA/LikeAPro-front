@@ -2,10 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { Container, Button, Card } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import qaApi from "../../lib/apis/qaApi";
+import qaApi from '../../lib/apis/qaApi';
 import rankingApi from "../../lib/apis/rankingApi";
-import commentApi from "../../lib/apis/commentApi";
-import { Editor } from "../../components/editor";
+import commentApi from '../../lib/apis/commentApi';
+import { Editor } from '../../components/editor';
 import ReactMarkdown from "react-markdown";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
@@ -81,6 +81,7 @@ const QADetailPage = () => {
 
   };
 
+
   const handleDeleteQA = async (qaId) => {
     try {
       await qaApi.deleteQA(qaId);
@@ -151,7 +152,8 @@ const QADetailPage = () => {
     setSelectedCommentId(commentId);
     try {
       await commentApi.updateCommentAcceptance(id, commentId, true);
-      const updatedComments = comments.map((comment) => ({
+      await commentApi.updateCommentAcceptance(id, commentId, true);
+      const updatedComments = comments.map(comment => ({
         ...comment,
         isAccepted: comment.id === commentId,
       }));
@@ -282,30 +284,12 @@ const QADetailPage = () => {
                 onChange={handleEditorChange}
               />
 
-              <Button
-                onClick={handleSave}
-                style={{
-                  marginRight: "10px",
-                  borderColor: "blue",
-                  color: "blue",
-                  backgroundColor: "transparent",
-                }}
-              >
-                Save
-              </Button>
-              <Button
-                onClick={handleCancel}
-                style={{
-                  marginRight: "10px",
-                  borderColor: "red",
-                  color: "red",
-                  backgroundColor: "transparent",
-                }}
-              >
-                Cancel
-              </Button>
+              <Button onClick={handleSave} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>Save</Button>
+              <Button onClick={handleCancel} style={{ marginRight: '10px', borderColor: 'red', color: 'red', backgroundColor: 'transparent' }}>Cancel</Button>
+
             </>
           )}
+
 
           <h3
             style={{
