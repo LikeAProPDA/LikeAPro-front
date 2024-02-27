@@ -1,13 +1,16 @@
+import { Container } from "react-bootstrap";
+import RecommendProblems from "../../components/beakjoon/RecommendProblems";
 import { Col, Container, Row } from "react-bootstrap";
 import CalandarForm from "../../components/calandar/calandarForm";
 import MainRankingForm from "../../components/ranking/mainRankingForm";
 import MainAlgorithmForm from "../../components/algorithm/mainAlgorithmForm";
 import MainQAForm from "../../components/qa/mainQAForm";
 
+
 const MainPage = () => {
   return (
     <>
-      {/* 메인화면 */}
+      <RecommendProblems />
       <Container>
         <Row className="my-5">
           <Col md={6} className="fw-bold py-5 px-4 py-4">

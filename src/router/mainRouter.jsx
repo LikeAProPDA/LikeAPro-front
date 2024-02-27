@@ -5,6 +5,7 @@ import QAPage from '../pages/qa/QAPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignUpPage from '../pages/signUp/SignUpPage';
 import QADetailPage from '../pages/qa/QADetailPage';
+import RankingPage from "../pages/ranking/RankingPage";
 
 export const mainRouter = [
     {
@@ -34,6 +35,11 @@ export const mainRouter = [
             {
                 path: '/qas/:id',
                 element: <QADetailPage />,
+                index: true,
+            },
+            {
+                path: "/ranking",
+                element: <RankingPage />,
                 index: true,
             },
         ],
