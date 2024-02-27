@@ -15,3 +15,7 @@ export const getRanking = async (start, limit) => {
 
   return response.data;
 };
+
+export default {
+  postScore,
+};
