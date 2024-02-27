@@ -7,6 +7,8 @@ import SignUpPage from '../pages/signUp/SignUpPage';
 import PlayGroundEditorPage from '../pages/playground/PlaygroundEditorPage';
 import PlayGroundPage from '../pages/playground/PlaygroundPage';
 import PlaygroundDetailPage from '../pages/playground/PlaygroundDetailPage';
+import QADetailPage from '../pages/qa/QADetailPage';
+import RankingPage from "../pages/ranking/RankingPage";
 
 export const mainRouter = [
     {
@@ -52,6 +54,16 @@ export const mainRouter = [
                         index: true,
                     },
                 ],
+            },
+            {
+                path: '/qas/:id',
+                element: <QADetailPage />,
+                index: true,
+            },
+            {
+                path: "/ranking",
+                element: <RankingPage />,
+                index: true,
             },
         ],
     },
