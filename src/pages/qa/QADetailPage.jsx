@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Container, Button, Card } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import qaApi from '../../lib/apis/qaApi';
+import rankingApi from "../../lib/apis/rankingApi";
 import rankingApi from "../../lib/apis/rankingApi";
 import commentApi from '../../lib/apis/commentApi';
 import { Editor } from '../../components/editor';
@@ -12,13 +14,16 @@ import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 
 const QADetailPage = () => {
   const { id } = useParams();
+  const [cid, setCid] = useState("");
   const [qa, setQA] = useState({});
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editorMode, setEditorMode] = useState('none');
+  const [editCommentContent, setEditCommentContent] = useState("");
+  const [sortedComments, setSortedComments] = useState([]);
   const [showEditor, setShowEditor] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const editorRef = useRef(null);
-
   const currentUser = useSelector((state) => state.user.user);
 
   useEffect(() => {
@@ -47,9 +52,14 @@ const QADetailPage = () => {
     fetchComments();
   }, [id]);
 
+  useEffect(() => {
+    if (editorMode === 'edit') {
+      editorRef.current.getInstance().setHTML(editCommentContent);
+    }
+  }, [editCommentContent, editorMode]);
+
   const handleEditorChange = (value) => {
-    // Editor의 내용이 변경될 때 실행되는 함수
-    // 필요에 따라 구현해야 함
+    // Handle editor change if needed
   };
 
   const shouldShowEditButtons = (authorId) => {
@@ -57,28 +67,33 @@ const QADetailPage = () => {
   };
 
   const handleEditQA = async (qaId) => {
-    // 수정 버튼을 눌렀을 때 에디터를 보이도록 함
-    setShowEditor(true);
+    setEditorMode('edit');
   };
 
   const handleDeleteQA = async (qaId) => {
     try {
       await qaApi.deleteQA(qaId);
-      // 성공적으로 삭제되었을 때의 로직 추가
+      // Handle successful deletion
     } catch (error) {
       console.error("Error deleting QA:", error);
     }
   };
 
   const handleEditComment = async (commentId) => {
-    setShowEditor(true);
-    // 수정 로직 추가
+    const commentToEdit = comments.find(comment => comment.id === commentId);
+    if (commentToEdit && commentToEdit.content) {
+      setEditCommentContent(commentToEdit.content);
+      setCid(commentId);
+      setEditorMode('edit');
+    } else {
+      console.error("Comment not found or does not have content");
+    }
   };
 
   const handleDeleteComment = async (commentId) => {
     try {
       await commentApi.deleteCommentForQA(commentId);
-      // 성공적으로 삭제되었을 때의 로직 추가
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
@@ -86,11 +101,17 @@ const QADetailPage = () => {
 
   const handleSave = async () => {
     const markdownContent = editorRef.current.getInstance().getMarkdown();
-    console.log(markdownContent);
     try {
-      await commentApi.uploadCommentForQA(id, markdownContent);
-      const data = await commentApi.getCommentsForQA(id);
-      setComments(data.result);
+      if (editorMode === 'edit') {
+        await commentApi.updateCommentForQA(id, cid, markdownContent);
+        const data = await commentApi.getCommentsForQA(id);
+        setComments(data.result);
+      } else {
+        await commentApi.uploadCommentForQA(id, markdownContent);
+        const data = await commentApi.getCommentsForQA(id);
+        setComments(data.result);
+      }
+      setEditorMode('none');
       setShowEditor(false);
     } catch (error) {
       console.error("Error saving comment:", error);
@@ -98,6 +119,7 @@ const QADetailPage = () => {
   };
 
   const handleCancel = () => {
+    setEditorMode('none');
     setShowEditor(false);
   };
 
@@ -105,12 +127,19 @@ const QADetailPage = () => {
     setSelectedCommentId(commentId);
     try {
       await commentApi.updateCommentAcceptance(id, commentId, true);
+      await commentApi.updateCommentAcceptance(id, commentId, true);
       const updatedComments = comments.map(comment => ({
         ...comment,
+        isAccepted: comment.id === commentId,
         isAccepted: comment.id === commentId,
       }));
       setComments(updatedComments);
       localStorage.setItem("selectedCommentId", commentId);
+      const selectedComment = updatedComments.find(comment => comment.id === commentId);
+      if (selectedComment) {
+        await rankingApi.postScore(5);
+        console.log(selectedComment.user.id);
+      }
       const selectedComment = updatedComments.find(comment => comment.id === commentId);
       if (selectedComment) {
         await rankingApi.postScore(5);
@@ -121,15 +150,22 @@ const QADetailPage = () => {
     }
   };
 
-  const showSelectButton = !selectedCommentId;
-
   const isSelected = (commentId) => commentId === selectedCommentId;
 
-  const sortedComments = comments.sort((a, b) => {
-    if (a.id === selectedCommentId) return -1;
-    if (b.id === selectedCommentId) return 1;
-    return 0;
-  });
+  useEffect(() => {
+    setSortedComments([...comments].sort((a, b) => {
+      if (a.id === selectedCommentId) return -1;
+      if (b.id === selectedCommentId) return 1;
+      return 0;
+    }));
+  }, [comments, selectedCommentId]);
+
+  useEffect(() => {
+    const storedCommentId = localStorage.getItem("selectedCommentId");
+    if (storedCommentId) {
+      setSelectedCommentId(storedCommentId);
+    }
+  }, []);
 
   const allCommentsAccepted = comments.some(comment => comment.isAccepted);
 
@@ -141,10 +177,21 @@ const QADetailPage = () => {
       ) : (
         <>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {!showEditor && (
-              <Button onClick={() => setShowEditor(true)} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>글 작성하기</Button>
+            {editorMode === 'none' && (
+              <Button onClick={() => setEditorMode('write')} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>글 작성하기</Button>
             )}
           </div>
+          <h3
+            style={{
+              fontWeight: "bolder",
+              fontSize: "2rem",
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+            }}
+          >
+            {" "}
+            🪧Question
+          </h3>
           <h3
             style={{
               fontWeight: "bolder",
@@ -168,24 +215,26 @@ const QADetailPage = () => {
           >
             <h2>{qa.qa.title}</h2>
             <p>{qa.qa.content}</p>
+            <p>작성자: {qa.qa.author.nickname}</p>
             <div>
-              {shouldShowEditButtons(qa.qa.authorId) && (
+              {shouldShowEditButtons(qa.qa.author._id) && (
                 <Button onClick={() => handleEditQA(qa.qa.id)} style={{ marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
               )}
-              {shouldShowEditButtons(qa.qa.authorId) && (
+              {shouldShowEditButtons(qa.qa.author._id) && (
                 <Button onClick={() => handleDeleteQA(qa.qa.id)} style={{ borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
               )}
             </div>
           </Card>
 
-          {showEditor && (
+          {(editorMode === 'write' || editorMode === 'edit') && (
             <>
-              <h3>🪄Add your knowledge!</h3>
+              <h3>{editorMode === 'edit' ? 'Edit Comment' : 'Add your knowledge!'}</h3>
+
               <Editor
                 ref={editorRef}
                 height="400px"
                 placeholder="Please Enter Text."
-                initialValue="내용을 입력해주세요."
+                initialValue={editCommentContent}
                 theme="dark"
                 previewStyle='vertical'
                 onChange={handleEditorChange}
@@ -193,9 +242,21 @@ const QADetailPage = () => {
 
               <Button onClick={handleSave} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>Save</Button>
               <Button onClick={handleCancel} style={{ marginRight: '10px', borderColor: 'red', color: 'red', backgroundColor: 'transparent' }}>Cancel</Button>
+              <Button onClick={handleCancel} style={{ marginRight: '10px', borderColor: 'red', color: 'red', backgroundColor: 'transparent' }}>Cancel</Button>
             </>
           )}
 
+          <h3
+            style={{
+              fontWeight: "bolder",
+              fontSize: "2rem",
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+            }}
+          >
+            {" "}
+            🔖Answers
+          </h3>
           <h3
             style={{
               fontWeight: "bolder",
@@ -214,9 +275,10 @@ const QADetailPage = () => {
                 margin: '10px 0',
                 padding: '10px 10px',
                 borderRadius: '15px',
-                backgroundColor: isSelected(comment.id) ? '#DFF0D8' : '#fff',
+                backgroundColor: isSelected(comment.id) ? '#DFF0D8' : (comment.isAccepted ? '#DFF0D8' : '#fff'),
                 boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                 display: 'flex',
+                flexDirection: 'column'
                 flexDirection: 'column'
               }}
             >
@@ -227,6 +289,14 @@ const QADetailPage = () => {
                   {comment.content}
                 </ReactMarkdown>
                 <p>작성자: {comment.user.nickname}</p>
+              </div>
+              <div>
+                {shouldShowEditButtons(comment.user.id) && (
+                  <Button onClick={() => handleEditComment(comment.id)} style={{ marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
+                )}
+                {shouldShowEditButtons(comment.user.id) && (
+                  <Button onClick={() => handleDeleteComment(comment.id)} style={{ borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
+                )}
               </div>
               <div>
                 {shouldShowEditButtons(comment.user.id) && (
