@@ -7,20 +7,39 @@ import { logoutUser } from "../../../store/userReducer";
 import { useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./customNavbar.css";
+import Cookies from "js-cookie";
 
 const CustomNavbar = () => {
-    const width = useWidth();
-    const dispatch = useDispatch();
-    const isLogin = useSelector((state) => state.user.isLogin);
-    const user = useSelector((state) => state.user.user);
-    const navigate = useNavigate();
+  const width = useWidth();
+  const dispatch = useDispatch();
+  const isLogin = useSelector((state) => state.user.isLogin);
+  const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
 
   const loginClick = useCallback(() => {
     navigate("/login");
   }, []);
-  
+
   const logoutClick = useCallback(() => {
     dispatch(logoutUser());
+
+    // 모든 쿠키를 문자열로 가져옴
+    const allCookies = document.cookie;
+
+    // 문자열을 쿠키 배열로 분할
+    const cookiesArray = allCookies.split("; ");
+
+    // "problem_"으로 시작하는 쿠키 필터링
+    const problemCookies = cookiesArray.filter((cookie) =>
+      cookie.startsWith("problem_")
+    );
+
+    // 문제 쿠키 삭제
+    problemCookies.forEach((cookie) => {
+      const cookieName = cookie.split("=")[0]; // 쿠키 이름 가져오기
+      Cookies.remove(cookieName); // js-cookie를 사용하여 쿠키 제거
+      Cookies.remove("isRecommend");
+    });
   }, []);
 
   return (
