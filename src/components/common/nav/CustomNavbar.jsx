@@ -9,16 +9,16 @@ import { Link, useNavigate } from "react-router-dom";
 import "./customNavbar.css";
 
 const CustomNavbar = () => {
-  const width = useWidth();
-  const dispatch = useDispatch();
-  const isLogin = useSelector((state) => state.isLogin);
-  const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
+    const width = useWidth();
+    const dispatch = useDispatch();
+    const isLogin = useSelector((state) => state.user.isLogin);
+    const user = useSelector((state) => state.user.user);
+    const navigate = useNavigate();
 
   const loginClick = useCallback(() => {
     navigate("/login");
   }, []);
-
+  
   const logoutClick = useCallback(() => {
     dispatch(logoutUser());
   }, []);
