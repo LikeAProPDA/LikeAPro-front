@@ -56,7 +56,7 @@ const MainAlgorithmForm = () => {
 
   return (
     <>
-      {problems.map((problem) => (
+      {problems?.map((problem) => (
         <Card
           key={uuidv4()}
           className="custom-bg my-card mt-3"
