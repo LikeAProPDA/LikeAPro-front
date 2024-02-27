@@ -40,7 +40,6 @@ const MainAlgorithmForm = () => {
           const solvedFromCookie = problemCookie
             ? JSON.parse(problemCookie.split("=")[1]).solved
             : false;
-
           return {
             ...problem,
             solved: solvedFromCookie,
