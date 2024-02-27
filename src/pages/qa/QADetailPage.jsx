@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Container, Button, Card } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import qaApi from '../../lib/apis/qaApi';
+import rankingApi from "../../lib/apis/rankingApi";
 import rankingApi from "../../lib/apis/rankingApi";
 import commentApi from '../../lib/apis/commentApi';
 import { Editor } from '../../components/editor';
@@ -125,12 +127,19 @@ const QADetailPage = () => {
     setSelectedCommentId(commentId);
     try {
       await commentApi.updateCommentAcceptance(id, commentId, true);
+      await commentApi.updateCommentAcceptance(id, commentId, true);
       const updatedComments = comments.map(comment => ({
         ...comment,
+        isAccepted: comment.id === commentId,
         isAccepted: comment.id === commentId,
       }));
       setComments(updatedComments);
       localStorage.setItem("selectedCommentId", commentId);
+      const selectedComment = updatedComments.find(comment => comment.id === commentId);
+      if (selectedComment) {
+        await rankingApi.postScore(5);
+        console.log(selectedComment.user.id);
+      }
       const selectedComment = updatedComments.find(comment => comment.id === commentId);
       if (selectedComment) {
         await rankingApi.postScore(5);
@@ -183,6 +192,17 @@ const QADetailPage = () => {
             {" "}
             🪧Question
           </h3>
+          <h3
+            style={{
+              fontWeight: "bolder",
+              fontSize: "2rem",
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+            }}
+          >
+            {" "}
+            🪧Question
+          </h3>
           <Card
             style={{
               margin: '20px 0',
@@ -222,9 +242,21 @@ const QADetailPage = () => {
 
               <Button onClick={handleSave} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>Save</Button>
               <Button onClick={handleCancel} style={{ marginRight: '10px', borderColor: 'red', color: 'red', backgroundColor: 'transparent' }}>Cancel</Button>
+              <Button onClick={handleCancel} style={{ marginRight: '10px', borderColor: 'red', color: 'red', backgroundColor: 'transparent' }}>Cancel</Button>
             </>
           )}
 
+          <h3
+            style={{
+              fontWeight: "bolder",
+              fontSize: "2rem",
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+            }}
+          >
+            {" "}
+            🔖Answers
+          </h3>
           <h3
             style={{
               fontWeight: "bolder",
@@ -247,6 +279,7 @@ const QADetailPage = () => {
                 boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                 display: 'flex',
                 flexDirection: 'column'
+                flexDirection: 'column'
               }}
             >
               <div style={{ marginBottom: '10px' }}>
@@ -256,6 +289,14 @@ const QADetailPage = () => {
                   {comment.content}
                 </ReactMarkdown>
                 <p>작성자: {comment.user.nickname}</p>
+              </div>
+              <div>
+                {shouldShowEditButtons(comment.user.id) && (
+                  <Button onClick={() => handleEditComment(comment.id)} style={{ marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
+                )}
+                {shouldShowEditButtons(comment.user.id) && (
+                  <Button onClick={() => handleDeleteComment(comment.id)} style={{ borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
+                )}
               </div>
               <div>
                 {shouldShowEditButtons(comment.user.id) && (
