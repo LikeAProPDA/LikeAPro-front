@@ -1,83 +1,53 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Card, Col, Image, Row } from "react-bootstrap";
-import { getIsSolved, getProblems } from "../../lib/apis/beakjoonApi";
+import {
+  getIsSolved,
+  getProblems,
+  getProblemsUser,
+} from "../../lib/apis/beakjoonApi";
 import { v4 as uuidv4 } from "uuid";
 
 const MainAlgorithmForm = () => {
-  const cookieName = "isRecommend";
   const [problems, setProblems] = useState([]);
+  const isLogin = useSelector((state) => state.user.isLogin);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const isRecommendCookie = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith(`${cookieName}=`));
-
-        const data = await getProblems(2);
-
-        if (!isRecommendCookie) {
-          const expirationDate = new Date();
-          expirationDate.setDate(expirationDate.getDate() + 1);
-          document.cookie = `${cookieName}=true; expires=${expirationDate.toUTCString()}`;
-
-          data.result.map(
-            (problem) =>
-              (document.cookie = `problem_${
-                problem.problemNum
-              }=${JSON.stringify({
-                problemNum: problem.problemNum,
-                solved: false,
-              })}`)
-          );
+        if (isLogin) {
+          const data = await getProblemsUser(2);
+          setProblems(data.result.problems);
+        } else {
+          const data = await getProblems(2);
+          setProblems(data.result);
         }
-
-        const initialProblems = data.result.map((problem) => {
-          const problemCookie = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith(`problem_${problem.problemNum}=`));
-
-          const solvedFromCookie = problemCookie
-            ? JSON.parse(problemCookie.split("=")[1]).solved
-            : false;
-
-          return {
-            ...problem,
-            solved: solvedFromCookie,
-          };
-        });
-
-        setProblems(initialProblems);
       } catch (error) {
         console.error("Error:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [isLogin]);
 
-  const checkIsSolved = async (problemNum) => {
+  const checkIsSolved = async (problemNum, problemId) => {
     try {
-      const data = await getIsSolved(problemNum);
-
-      console.log(problemNum);
+      const data = await getIsSolved(problemNum, problemId);
 
       if (data.result.isSolved) {
         const updatedProblems = problems.map((problem) => {
-          if (problem.problemNum === problemNum) {
-            document.cookie = `problem_${problemNum}=${JSON.stringify({
-              problemNum: problemNum,
-              solved: true,
-            })}`;
+          if (problem.problem.problemNum === problemNum) {
             return {
               ...problem,
-              solved: data.result.isSolved,
+              isSolved: data.result.isSolved,
             };
           }
           return problem;
         });
 
         setProblems(updatedProblems);
+      } else {
+        alert("문제를 풀어주세요!");
       }
     } catch (error) {
       console.error("Error checking isSolved:", error);
@@ -100,7 +70,7 @@ const MainAlgorithmForm = () => {
             <Row>
               <Col xl={6} xs={6} md={6}>
                 <Card.Title
-                  href={problem.link}
+                  href={problem.problem.link}
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -108,12 +78,12 @@ const MainAlgorithmForm = () => {
                   }}
                   className="pt-2"
                   // eslint-disable-next-line no-unused-vars
-                  onClick={(e) => window.open(problem.link)}
+                  onClick={(e) => window.open(problem.problem.link)}
                 >
-                  {problem.algoName}
+                  {problem.problem.algoName}
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted text-truncate">
-                  {problem.tags.map((tag) => (
+                  {problem.problem.tags.map((tag) => (
                     <span key={uuidv4()}>#{tag}</span>
                   ))}
                 </Card.Subtitle>
@@ -125,14 +95,14 @@ const MainAlgorithmForm = () => {
                 className="d-flex align-items-center justify-content-center"
               >
                 <Image
-                  src={`https://d2gd6pc034wcta.cloudfront.net/tier/${problem.level}.svg`}
+                  src={`https://d2gd6pc034wcta.cloudfront.net/tier/${problem.problem.level}.svg`}
                   style={{ width: 50 }}
                 ></Image>
               </Col>
 
               {/* solved */}
 
-              {problem.solved ? (
+              {problem.isSolved ? (
                 <Col
                   xl={3}
                   xs={3}
@@ -158,7 +128,12 @@ const MainAlgorithmForm = () => {
                   xs={3}
                   md={3}
                   className="d-flex justify-content-end align-items-center"
-                  onClick={() => checkIsSolved(problem.problemNum)}
+                  onClick={() =>
+                    checkIsSolved(
+                      problem.problem.problemNum,
+                      problem.problem._id
+                    )
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
