@@ -28,7 +28,7 @@ const CustomNavbar = () => {
     }, []);
 
     return (
-        <Navbar expand="md" className="bg-white py-0">
+        <Navbar expand="md" className="bg-white py-0 shadow">
             <Container className={width < 767 ? 'py-2' : false}>
                 <Navbar.Brand href="/" className="text-primary fw-bold">
                     <img src={logo} width="28" height="28" className="d-inline-block align-top" />
@@ -59,6 +59,16 @@ const CustomNavbar = () => {
                                 className={width < 767 ? false : 'customNavLink'}
                             >
                                 랭킹
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link
+                                eventKey="/playgrounds"
+                                as={Link}
+                                to="/playgrounds"
+                                className={width < 767 ? false : 'customNavLink'}
+                            >
+                                플레이그라운드
                             </Nav.Link>
                         </Nav.Item>
                     </Nav>
