@@ -1,20 +1,12 @@
-import RecommendProblems from "../../components/beakjoon/RecommendProblems";
 import { Col, Container, Row } from "react-bootstrap";
 import CalandarForm from "../../components/calandar/calandarForm";
 import MainRankingForm from "../../components/ranking/mainRankingForm";
 import MainAlgorithmForm from "../../components/algorithm/mainAlgorithmForm";
-
-// swiper
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import { Autoplay } from "swiper/modules";
+import MainQAForm from "../../components/qa/mainQAForm";
 
 const MainPage = () => {
   return (
     <>
-      <RecommendProblems />
       <Container>
         <Row className="my-5">
           <Col md={6} className="fw-bold py-5 px-4 py-4">
@@ -27,23 +19,9 @@ const MainPage = () => {
             <MainAlgorithmForm />
           </Col>
         </Row>
-        <Row>
-          <h2>Q&A</h2>
-          <Swiper
-            modules={[Autoplay]}
-            spaceBetween={50}
-            slidesPerView={3}
-            autoplay={{ delay: 1000, disableOnInteraction: false }}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
-          >
-            <SwiperSlide>Slide 1</SwiperSlide>
-            <SwiperSlide>Slide 2</SwiperSlide>
-            <SwiperSlide>Slide 3</SwiperSlide>
-            <SwiperSlide>Slide 4</SwiperSlide>
-            ...
-          </Swiper>
-        </Row>
+      </Container>
+      <Container fluid className="px-0 mx-0">
+        <MainQAForm />
       </Container>
     </>
   );
