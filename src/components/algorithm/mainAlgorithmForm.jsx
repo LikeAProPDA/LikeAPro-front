@@ -7,34 +7,24 @@ import {
   getProblemsUser,
 } from "../../lib/apis/beakjoonApi";
 import { v4 as uuidv4 } from "uuid";
-
 const MainAlgorithmForm = () => {
   const [problems, setProblems] = useState([]);
-  const isLogin = useSelector((state) => state.user.isLogin);
-
+  const isLogin = useSelector((state) => state.user);
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        if (isLogin) {
-          const data = await getProblemsUser(2);
-          setProblems(data.result.problems);
-        } else {
-          const data = await getProblems(2);
-          setProblems(data.result);
-        }
-
-      } catch (error) {
-        console.error("Error:", error);
+      if (isLogin) {
+        const data = await getProblemsUser(2);
+        return data.result.problems;
+      } else {
+        const data = await getProblems(2);
+        return data.result;
       }
     };
-
-    fetchData();
+    fetchData().then((data) => setProblems(data));
   }, [isLogin]);
-
   const checkIsSolved = async (problemNum, problemId) => {
     try {
       const data = await getIsSolved(problemNum, problemId);
-
       if (data.result.isSolved) {
         const updatedProblems = problems.map((problem) => {
           if (problem.problem.problemNum === problemNum) {
@@ -45,7 +35,6 @@ const MainAlgorithmForm = () => {
           }
           return problem;
         });
-
         setProblems(updatedProblems);
       } else {
         alert("문제를 풀어주세요!");
@@ -54,10 +43,9 @@ const MainAlgorithmForm = () => {
       console.error("Error checking isSolved:", error);
     }
   };
-
   return (
     <>
-      {problems?.map((problem) => (
+      {Object.values(problems)?.map((problem) => (
         <Card
           key={uuidv4()}
           className="custom-bg my-card mt-3"
@@ -100,9 +88,7 @@ const MainAlgorithmForm = () => {
                   style={{ width: 50 }}
                 ></Image>
               </Col>
-
               {/* solved */}
-
               {problem.isSolved ? (
                 <Col
                   xl={3}
@@ -156,5 +142,4 @@ const MainAlgorithmForm = () => {
     </>
   );
 };
-
 export default MainAlgorithmForm;
