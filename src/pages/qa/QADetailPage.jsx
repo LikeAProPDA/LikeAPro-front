@@ -9,6 +9,7 @@ import { Editor } from '../../components/editor';
 import ReactMarkdown from "react-markdown";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
+
 const QADetailPage = () => {
   const { id } = useParams();
   const [cid, setCid] = useState("");
@@ -22,6 +23,7 @@ const QADetailPage = () => {
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const editorRef = useRef(null);
   const currentUser = useSelector((state) => state.user.user);
+
   useEffect(() => {
     const fetchQA = async () => {
       try {
@@ -56,6 +58,7 @@ const QADetailPage = () => {
   const shouldShowEditButtons = (authorId) => {
     return currentUser && currentUser.id === authorId;
   };
+
   const handleEditQA = async (qaId) => {
     setEditorMode("edit");
   };
@@ -140,7 +143,9 @@ const QADetailPage = () => {
       setSelectedCommentId(storedCommentId);
     }
   }, []);
+
   const allCommentsAccepted = comments.some(comment => comment.isAccepted);
+
   return (
     <Container>
       <br />
@@ -185,7 +190,8 @@ const QADetailPage = () => {
             >
               {qa.qa.content}
             </ReactMarkdown>
-            <p>작성자: {qa.qa.author.nickname}</p>
+
+            <p>✏️: {qa.qa.author.nickname}</p>
             <div>
               {shouldShowEditButtons(qa.qa.author._id) && (
                 <Button
@@ -214,9 +220,11 @@ const QADetailPage = () => {
               )}
             </div>
           </Card>
+
           {(editorMode === "write" || editorMode === "edit") && (
             <>
               <h3>{editorMode === 'edit' ? 'Edit Comment' : 'Add your knowledge!'}</h3>
+
               <Editor
                 ref={editorRef}
                 height="400px"
@@ -226,10 +234,13 @@ const QADetailPage = () => {
                 previewStyle='vertical'
                 onChange={handleEditorChange}
               />
+
               <Button onClick={handleSave} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>Save</Button>
               <Button onClick={handleCancel} style={{ marginRight: '10px', borderColor: 'red', color: 'red', backgroundColor: 'transparent' }}>Cancel</Button>
+
             </>
           )}
+
           <h3
             style={{
               fontWeight: "bolder",
@@ -252,6 +263,7 @@ const QADetailPage = () => {
                 boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                 display: 'flex',
                 flexDirection: 'column'
+
               }}
             >
               <div style={{ marginBottom: "10px" }}>
@@ -264,8 +276,9 @@ const QADetailPage = () => {
                 >
                   {comment.content}
                 </ReactMarkdown>
-                <p>작성자: {comment.user.nickname}</p>
+                <p>✏️: {comment.user.nickname}</p>
               </div>
+
               <div>
                 {shouldShowEditButtons(comment.user.id) && (
                   <Button onClick={() => handleEditComment(comment.id)} style={{ marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
