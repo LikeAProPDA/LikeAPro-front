@@ -214,11 +214,12 @@ const QADetailPage = () => {
               flexDirection: 'column',
             }}
           >
-
-
-            <h4>{qa.qa.title}</h4>
-            <hr/>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> {/* 제목과 닉네임을 같은 행으로 배치하고 가운데 정렬합니다. */}
+              <h4>{qa.qa.title}</h4>
+              <div style={{ fontWeight: 'bold' }}>✏️ {qa.qa.author.nickname}</div>
+            </div>
+            <hr />
+            <div style={{ marginBottom: '10px' }}>
               <ReactMarkdown
                 components={{
                   a: (props) => <a target="_blank" style={{ color: "red" }} {...props} />,
@@ -227,14 +228,8 @@ const QADetailPage = () => {
               >
                 {qa.qa.content}
               </ReactMarkdown>
-
-              <div>
-                <p style={{ fontWeight: 'bold' }}>✏️ {qa.qa.author.nickname} </p>
-              </div>
             </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
                 {shouldShowEditButtons(qa.qa.author._id) && (
                   <Button onClick={() => handleEditQA(qa.qa._id)} style={{ fontSize: '0.8rem', marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
@@ -243,9 +238,10 @@ const QADetailPage = () => {
                   <Button onClick={() => handleDeleteQA(qa.qa._id)} style={{ fontSize: '0.8rem', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
                 )}
               </div>
-
             </div>
           </Card>
+
+
 
 
           {(editorMode === 'write' || editorMode === 'edit') && (
