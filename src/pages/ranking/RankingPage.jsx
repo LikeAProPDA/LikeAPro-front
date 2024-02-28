@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Container, Pagination } from "react-bootstrap";
+import { Container, Image, Pagination } from "react-bootstrap";
 import { getRanking } from "../../lib/apis/rankingApi";
 import { v4 as uuidv4 } from "uuid";
 import medal1 from "../../assets/images/medal1.png";
 import medal2 from "../../assets/images/medal2.png";
 import medal3 from "../../assets/images/medal3.png";
+import GreatImg from "../../assets/images/great.png";
+import "./RankingPage.css";
 
 const RankingPage = () => {
   const rankColor = ["247, 187, 37", "184, 184, 184", "224, 139, 55"];
@@ -40,20 +42,41 @@ const RankingPage = () => {
   };
 
   return (
-    <Container style={{ maxWidth: "900px", margin: "auto", padding: "4rem 0" }}>
-      <h3
-        style={{
-          fontWeight: "bolder",
-          margin: "0 0 2rem 1.5rem",
-          fontSize: "2.5rem",
-          textTransform: "uppercase",
-          letterSpacing: "2px",
-          textAlign: "center",
-        }}
-      >
-        {" "}
-        ✨ 이달의 Pro ✨
-      </h3>
+    <Container
+      style={{
+        maxWidth: "900px",
+        margin: "auto",
+        padding: "2rem 0",
+        fontFamily: "GyeonggiTitleM",
+      }}
+    >
+      <div style={{ paddingLeft: "3rem" }}>
+        <div style={{ display: "flex" }}>
+          <Image src={GreatImg} width={60} style={{ marginRight: "0.5rem" }} />
+          <div
+            style={{
+              fontWeight: "bolder",
+              fontSize: "2.5rem",
+              textTransform: "uppercase",
+            }}
+          >
+            {/* <Image src={GreatImg} width={60} style={{ marginRight: "0.5rem" }} /> */}
+            이달의 Pro
+          </div>
+        </div>
+
+        <div
+          style={{
+            fontSize: "1.3rem",
+            margin: "-0.2rem 0 1rem 0rem",
+            textTransform: "uppercase",
+            letterSpacing: "-0.5px",
+            color: "",
+          }}
+        >
+          이달의 프로에 도전하세요!
+        </div>
+      </div>
       <div
         style={{
           backgroundColor: "rgba(199, 220, 255, 0.5)",
