@@ -87,7 +87,7 @@ const PlayGroundEditorPage = () => {
                 <Col md={6}>
                     <iframe
                         srcDoc={toDoc(code, userState?.email, userState?.nickname, isLogin)}
-                        sandbox="allow-scripts allow-modals allow-top-navigation"
+                        sandbox="allow-scripts allow-modals allow-top-navigation allow-same-origin allow-forms"
                         width="100%"
                         height="100%"
                     />
