@@ -1,11 +1,15 @@
-import { createBrowserRouter } from 'react-router-dom';
-import Layout from '../pages/Layout';
-import MainPage from '../pages/main/MainPage';
-import QAPage from '../pages/qa/QAPage';
-import LoginPage from '../pages/login/LoginPage';
-import SignUpPage from '../pages/signUp/SignUpPage';
-import QADetailPage from '../pages/qa/QADetailPage';
+import { createBrowserRouter } from "react-router-dom";
+import Layout from "../pages/Layout";
+import MainPage from "../pages/main/MainPage";
+import QAPage from "../pages/qa/QAPage";
+import LoginPage from "../pages/login/LoginPage";
+import SignUpPage from "../pages/signUp/SignUpPage";
+import QADetailPage from "../pages/qa/QADetailPage";
+import PlayGroundEditorPage from '../pages/playground/PlaygroundEditorPage';
+import PlayGroundPage from '../pages/playground/PlaygroundPage';
+import PlaygroundDetailPage from '../pages/playground/PlaygroundDetailPage';
 import RankingPage from "../pages/ranking/RankingPage";
+import QAWritePage from "../pages/qa/QAWritePage";
 
 export const mainRouter = [
     {
@@ -33,6 +37,26 @@ export const mainRouter = [
                 index: true,
             },
             {
+                path: '/playgrounds',
+                children: [
+                    {
+                        path: '',
+                        element: <PlayGroundPage />,
+                        index: true,
+                    },
+                    {
+                        path: 'editor',
+                        element: <PlayGroundEditorPage />,
+                        index: true,
+                    },
+                    {
+                        path: ':id',
+                        element: <PlaygroundDetailPage />,
+                        index: true,
+                    },
+                ],
+            },
+            {
                 path: '/qas/:id',
                 element: <QADetailPage />,
                 index: true,
@@ -41,6 +65,11 @@ export const mainRouter = [
                 path: "/ranking",
                 element: <RankingPage />,
                 index: true,
+            },
+            {
+              path: "/qas/write",
+              element: <QAWritePage />,
+              index: true,
             },
         ],
     },
