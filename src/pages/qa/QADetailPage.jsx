@@ -18,7 +18,6 @@ const QADetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [editorMode, setEditorMode] = useState('none');
   const [editCommentContent, setEditCommentContent] = useState(" ");
-  const [editCommentContent, setEditCommentContent] = useState(" ");
   const [sortedComments, setSortedComments] = useState([]);
   const [showEditor, setShowEditor] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
@@ -45,13 +44,11 @@ const QADetailPage = () => {
         // 채택된 댓글을 가장 먼저 정렬하여 저장
         const sortedData = data.result.sort((a, b) => b.isAccepted - a.isAccepted);
         setComments(sortedData);
-        // 채택된 댓글을 가장 먼저 정렬하여 저장
-        const sortedData = data.result.sort((a, b) => b.isAccepted - a.isAccepted);
-        setComments(sortedData);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
     };
+
 
     fetchQA();
     fetchComments();
