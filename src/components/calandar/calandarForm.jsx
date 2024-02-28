@@ -4,6 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useEffect, useState } from "react";
 import { getSchedule } from "../../lib/apis/scheduleApi";
+import Swal from "sweetalert2";
 
 const CalandarForm = () => {
   const [schedule, setSchedule] = useState([]);
@@ -19,8 +20,11 @@ const CalandarForm = () => {
   };
 
   const handleEventClick = (arg) => {
-    // console.log(arg.event._def);
-    alert(arg.event._def.title);
+    Swal.fire({
+      title: arg.event._def.title,
+      text: arg.dateStr,
+      confirmButtonText: "확인",
+    });
   };
 
   return (
