@@ -26,9 +26,7 @@ const MainAlgorithmForm = () => {
       }
     };
 
-    if (user !== undefined && user !== null) {
-      fetchData();
-    }
+    fetchData();
   }, [user]);
 
   const checkIsSolved = async (problemNum, problemId) => {
