@@ -176,12 +176,6 @@ const QADetailPage = () => {
     }));
   }, [comments, selectedCommentId]);
 
-  useEffect(() => {
-    const storedCommentId = localStorage.getItem(`selectedCommentId_${id}`);
-    if (storedCommentId) {
-      setSelectedCommentId(storedCommentId);
-    }
-  }, [id]);
 
   const allCommentsAccepted = comments.some(comment => comment.isAccepted);
 
@@ -213,7 +207,7 @@ const QADetailPage = () => {
               margin: '20px 20px',
               padding: '30px 30px',
               borderRadius: '15px',
-              backgroundColor: '#E3EDFF',
+              backgroundColor: '#FFF',
               boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
               display: 'flex',
               flexDirection: 'column',
@@ -221,17 +215,18 @@ const QADetailPage = () => {
           >
 
 
-            <h2>{qa.qa.title}</h2>
+            <h4>{qa.qa.title}</h4>
+            <hr/>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
               <ReactMarkdown
                 components={{
-                  a: (props) => (
-                    <a target="_blank" style={{ color: "red" }} {...props} />
-                  ),
+                  a: (props) => <a target="_blank" style={{ color: "red" }} {...props} />,
+                  p: (props) => <p {...props} style={{ whiteSpace: 'pre-line' }} />
                 }}
               >
                 {qa.qa.content}
               </ReactMarkdown>
+
               <div>
                 <p style={{ fontWeight: 'bold' }}>✏️ {qa.qa.author.nickname} </p>
               </div>
@@ -272,7 +267,7 @@ const QADetailPage = () => {
             </>
           )}
 
-
+          <br />
           <h3
             style={{
               fontWeight: "bolder",
@@ -299,11 +294,15 @@ const QADetailPage = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <div>
-                  <ReactMarkdown components={{
-                    a: (props) => <a target="_blank" style={{ color: "red" }} {...props} />,
-                  }}>
+                  <ReactMarkdown
+                    components={{
+                      a: (props) => <a target="_blank" style={{ color: "red" }} {...props} />,
+                      p: (props) => <p {...props} style={{ whiteSpace: 'pre-line' }} />
+                    }}
+                  >
                     {comment.content}
                   </ReactMarkdown>
+
                 </div>
                 <div>
                   <p style={{ fontWeight: 'bold' }}>✏️ {comment.user.nickname}</p>
@@ -312,16 +311,27 @@ const QADetailPage = () => {
 
               <div>
                 <div>
-                  {shouldShowEditButtons(comment.user.id) && (
-                    <Button onClick={() => handleEditComment(comment.id)} style={{ fontSize: '0.8rem', marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
-                  )}
-                  {shouldShowEditButtons(comment.user.id) && (
-                    <Button onClick={() => handleDeleteComment(comment.id)} style={{ fontSize: '0.8rem', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
-                  )}
-                  {shouldShowAcceptButton() && (
-                    <Button onClick={() => handleSelectComment(comment.id)} style={{ borderColor: 'green', color: 'white', backgroundColor: 'green', width: '100px' }}>채택하기</Button>
-                  )}
+                  <div style={{ display: "flex" }}>
+                    {shouldShowEditButtons(comment.user.id) && (
+                      <span style={{ marginRight: '10px' }}>
+                        <Button onClick={() => handleEditComment(comment.id)} style={{ fontSize: '0.8rem', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
+                      </span>
+                    )}
+                    {shouldShowEditButtons(comment.user.id) && (
+                      <span style={{ marginRight: '10px' }}>
+                        <Button onClick={() => handleDeleteComment(comment.id)} style={{ fontSize: '0.8rem', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
+                      </span>
+                    )}
+                    <div>
+                      {shouldShowAcceptButton() && (
+                        <span>
+                          <span onClick={() => handleSelectComment(comment.id)} style={{ cursor: 'pointer', fontSize: '2rem', marginLeft: "1030px" }}>✅</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </Card>
           ))}
