@@ -7,6 +7,8 @@ import {
   getProblemsUser,
 } from "../../lib/apis/beakjoonApi";
 import { v4 as uuidv4 } from "uuid";
+import Swal from "sweetalert2";
+
 const MainAlgorithmForm = () => {
   const [problems, setProblems] = useState([]);
   const user = useSelector((state) => state.user.user);
@@ -44,7 +46,10 @@ const MainAlgorithmForm = () => {
         });
         setProblems(updatedProblems);
       } else {
-        alert("문제를 풀어주세요!");
+        Swal.fire({
+          icon: "error",
+          title: "문제를 풀어주세요!",
+        });
       }
     } catch (error) {
       console.error("Error checking isSolved:", error);
