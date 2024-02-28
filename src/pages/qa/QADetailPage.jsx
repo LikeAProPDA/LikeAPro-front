@@ -78,6 +78,7 @@ const QADetailPage = () => {
     } catch (error) {
       console.error("Error editing post:", error);
     }
+
   };
 
   const handleDeleteQA = async (qaId) => {
@@ -155,8 +156,10 @@ const QADetailPage = () => {
         isAccepted: comment.id === commentId,
       }));
       setComments(updatedComments);
+
       localStorage.setItem(`selectedCommentId_${id}`, commentId);
       const selectedComment = updatedComments.find(comment => comment.id === commentId);
+
       if (selectedComment) {
         await rankingApi.postScore(5);
         console.log(selectedComment.user.id);
@@ -222,7 +225,15 @@ const QADetailPage = () => {
             <h4 style={{ fontWeight: 'bold' }}>{qa.qa.title}</h4>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
 
-              <p>{qa.qa.content}</p>
+              <ReactMarkdown
+              components={{
+                a: (props) => (
+                  <a target="_blank" style={{ color: "red" }} {...props} />
+                ),
+              }}
+            >
+              {qa.qa.content}
+            </ReactMarkdown>
               <div>
                 <p style={{ fontWeight: 'bold' }}>✏️ {qa.qa.author.nickname} </p>
               </div>
@@ -245,7 +256,9 @@ const QADetailPage = () => {
 
           {(editorMode === 'write' || editorMode === 'edit') && (
             <>
-              <h3>{editorMode === 'edit' ? 'Edit Comment' : 'Add your knowledge!'}</h3>
+              <h3>
+                {editorMode === "edit" ? "Edit Comment" : "Add your knowledge!"}
+              </h3>
 
               <Editor
                 ref={editorRef}
@@ -314,6 +327,7 @@ const QADetailPage = () => {
                   )}
                 </div>
               </div>
+
             </Card>
           ))}
         </>
