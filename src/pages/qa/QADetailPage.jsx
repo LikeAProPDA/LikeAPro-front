@@ -9,7 +9,6 @@ import { Editor } from "../../components/editor";
 import ReactMarkdown from "react-markdown";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
-
 const QADetailPage = () => {
   const { id } = useParams();
   const [cid, setCid] = useState("");
@@ -23,7 +22,6 @@ const QADetailPage = () => {
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const editorRef = useRef(null);
   const currentUser = useSelector((state) => state.user.user);
-
   useEffect(() => {
     const fetchQA = async () => {
       try {
@@ -36,7 +34,6 @@ const QADetailPage = () => {
         setLoading(false);
       }
     };
-
     const fetchComments = async () => {
       try {
         const data = await commentApi.getCommentsForQA(id);
@@ -45,29 +42,23 @@ const QADetailPage = () => {
         console.error("Error fetching comments:", error);
       }
     };
-
     fetchQA();
     fetchComments();
   }, [id]);
-
   useEffect(() => {
     if (editorMode === "edit") {
       editorRef.current.getInstance().setHTML(editCommentContent);
     }
   }, [editCommentContent, editorMode]);
-
   const handleEditorChange = (value) => {
     // Handle editor change if needed
   };
-
   const shouldShowEditButtons = (authorId) => {
     return currentUser && currentUser.id === authorId;
   };
-
   const handleEditQA = async (qaId) => {
     setEditorMode("edit");
   };
-
   const handleDeleteQA = async (qaId) => {
     try {
       await qaApi.deleteQA(qaId);
@@ -76,7 +67,6 @@ const QADetailPage = () => {
       console.error("Error deleting QA:", error);
     }
   };
-
   const handleEditComment = async (commentId) => {
     const commentToEdit = comments.find((comment) => comment.id === commentId);
     if (commentToEdit && commentToEdit.content) {
@@ -87,7 +77,6 @@ const QADetailPage = () => {
       console.error("Comment not found or does not have content");
     }
   };
-
   const handleDeleteComment = async (commentId) => {
     try {
       await commentApi.deleteCommentForQA(commentId);
@@ -96,7 +85,6 @@ const QADetailPage = () => {
       console.error("Error deleting comment:", error);
     }
   };
-
   const handleSave = async () => {
     const markdownContent = editorRef.current.getInstance().getMarkdown();
     try {
@@ -115,12 +103,10 @@ const QADetailPage = () => {
       console.error("Error saving comment:", error);
     }
   };
-
   const handleCancel = () => {
     setEditorMode("none");
     setShowEditor(false);
   };
-
   const handleSelectComment = async (commentId) => {
     setSelectedCommentId(commentId);
     try {
@@ -142,9 +128,7 @@ const QADetailPage = () => {
       console.error("Error updating comment acceptance:", error);
     }
   };
-
   const isSelected = (commentId) => commentId === selectedCommentId;
-
   useEffect(() => {
     setSortedComments(
       [...comments].sort((a, b) => {
@@ -154,16 +138,13 @@ const QADetailPage = () => {
       })
     );
   }, [comments, selectedCommentId]);
-
   useEffect(() => {
     const storedCommentId = localStorage.getItem("selectedCommentId");
     if (storedCommentId) {
       setSelectedCommentId(storedCommentId);
     }
   }, []);
-
   const allCommentsAccepted = comments.some((comment) => comment.isAccepted);
-
   return (
     <Container>
       <br />
@@ -195,7 +176,7 @@ const QADetailPage = () => {
             }}
           >
             {" "}
-            🪧Question
+            :팻말:Question
           </h3>
           <Card
             style={{
@@ -218,7 +199,6 @@ const QADetailPage = () => {
             >
               {qa.qa.content}
             </ReactMarkdown>
-
             <p>작성자: {qa.qa.author.nickname}</p>
             <div>
               {shouldShowEditButtons(qa.qa.author._id) && (
@@ -234,7 +214,6 @@ const QADetailPage = () => {
                   수정
                 </Button>
               )}
-
               {shouldShowEditButtons(qa.qa.author._id) && (
                 <Button
                   onClick={() => handleDeleteQA(qa.qa.id)}
@@ -249,13 +228,11 @@ const QADetailPage = () => {
               )}
             </div>
           </Card>
-
           {(editorMode === "write" || editorMode === "edit") && (
             <>
               <h3>
                 {editorMode === "edit" ? "Edit Comment" : "Add your knowledge!"}
               </h3>
-
               <Editor
                 ref={editorRef}
                 height="400px"
@@ -265,7 +242,6 @@ const QADetailPage = () => {
                 previewStyle="vertical"
                 onChange={handleEditorChange}
               />
-
               <Button
                 onClick={handleSave}
                 style={{
@@ -290,7 +266,6 @@ const QADetailPage = () => {
               </Button>
             </>
           )}
-
           <h3
             style={{
               fontWeight: "bolder",
@@ -300,7 +275,7 @@ const QADetailPage = () => {
             }}
           >
             {" "}
-            🔖Answers
+            :책갈피:Answers
           </h3>
           {sortedComments.map((comment, index) => (
             <Card
@@ -331,7 +306,6 @@ const QADetailPage = () => {
                 </ReactMarkdown>
                 <p>작성자: {comment.user.nickname}</p>
               </div>
-
               <div>
                 {shouldShowEditButtons(comment.user.id) && (
                   <Button
@@ -380,5 +354,4 @@ const QADetailPage = () => {
     </Container>
   );
 };
-
 export default QADetailPage;
