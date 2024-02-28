@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import qaApi from "../../lib/apis/qaApi";
 import { useSelector } from "react-redux";
+import commentApi from "../../lib/apis/commentApi";
 // import CustomNavbar from '../../components/common/nav/CustomNavbar';
 
 const QAPage = () => {
@@ -33,14 +34,21 @@ const QAPage = () => {
       try {
         setLoading(true);
         const data = await qaApi.getQAboard();
-        setQas(data.qas);
+        // 각 QA에 대한 댓글 수를 가져와서 저장
+        const updatedQAs = await Promise.all(
+          data.qas.map(async (qa) => {
+            const comments = await commentApi.getCommentsForQA(qa.id);
+            console.log(comments);
+            return { ...qa, commentCount: comments.result.length };
+          })
+        );
+        setQas(updatedQAs);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching QAs:", error);
         setLoading(false);
       }
     };
-
     fetchQAs();
   }, []);
 

@@ -234,6 +234,7 @@ const QADetailPage = () => {
                   수정
                 </Button>
               )}
+
               {shouldShowEditButtons(qa.qa.author._id) && (
                 <Button
                   onClick={() => handleDeleteQA(qa.qa.id)}
