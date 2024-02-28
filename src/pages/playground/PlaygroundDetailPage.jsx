@@ -24,7 +24,7 @@ const PlaygroundDetailPage = () => {
         <>
             <iframe
                 srcDoc={playground ? toDoc(playground.code, userState?.email) : ''}
-                sandbox="allow-scripts allow-modals allow-top-navigation"
+                sandbox="allow-scripts allow-modals allow-top-navigation allow-same-origin allow-forms"
                 width="100%"
                 style={{
                     minHeight: '96vh',
