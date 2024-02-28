@@ -10,45 +10,48 @@ import {
 import { Link } from "react-router-dom";
 import qaApi from "../../lib/apis/qaApi";
 import { useSelector } from "react-redux";
+import commentApi from "../../lib/apis/commentApi";
 // import CustomNavbar from '../../components/common/nav/CustomNavbar';
-
 const QAPage = () => {
   const [qas, setQas] = useState([]);
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user.user);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // 한 페이지에 표시될 QA 수
-
   // Pagination 관련 함수
   const indexOfLastQA = currentPage * itemsPerPage;
   const indexOfFirstQA = indexOfLastQA - itemsPerPage;
   const currentQAs = qas.slice(indexOfFirstQA, indexOfLastQA);
-
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
   useEffect(() => {
     const fetchQAs = async () => {
       try {
         setLoading(true);
         const data = await qaApi.getQAboard();
-        setQas(data.qas);
+        // 각 QA에 대한 댓글 수를 가져와서 저장
+        const updatedQAs = await Promise.all(
+          data.qas.map(async (qa) => {
+            const comments = await commentApi.getCommentsForQA(qa.id);
+            console.log(comments);
+            return { ...qa, commentCount: comments.result.length };
+          })
+        );
+        setQas(updatedQAs);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching QAs:", error);
         setLoading(false);
       }
     };
-
     fetchQAs();
   }, []);
-
   return (
     <Container>
       <Row className="justify-content-between pt-3">
         <Col xs={6}>
-          <h5 className="lh-base fw-bold">✨지식투자 리스트</h5>
+          <h5 className="lh-base fw-bold">:반짝임:지식투자 리스트</h5>
         </Col>
         <Col xs={6} className="text-end">
           {user && (
@@ -72,7 +75,6 @@ const QAPage = () => {
           )}
         </Col>
       </Row>
-
       <ListGroup>
         {loading ? (
           <ListGroup.Item>Loading QAs...</ListGroup.Item>
@@ -104,7 +106,6 @@ const QAPage = () => {
           ))
         )}
       </ListGroup>
-
       {/* Pagination */}
       <Pagination className="mt-3 justify-content-center">
         {Array.from({ length: Math.ceil(qas.length / itemsPerPage) }).map(
@@ -122,5 +123,4 @@ const QAPage = () => {
     </Container>
   );
 };
-
 export default QAPage;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Container, Button, Card } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import qaApi from "../../lib/apis/qaApi";
 import rankingApi from "../../lib/apis/rankingApi";
@@ -23,6 +23,7 @@ const QADetailPage = () => {
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const editorRef = useRef(null);
   const currentUser = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQA = async () => {
@@ -64,14 +65,28 @@ const QADetailPage = () => {
     return currentUser && currentUser.id === authorId;
   };
 
+  const shouldShowAcceptButton = () => {
+    const hasAcceptedComment = comments.some(comment => comment.isAccepted);
+    return currentUser && currentUser.id === qa.qa.author._id && !hasAcceptedComment;
+  };
+
+
   const handleEditQA = async (qaId) => {
-    setEditorMode("edit");
+    try {
+      setEditCommentContent(qa.qa.content); // 게시물 내용을 수정 창에 표시
+      setEditorMode('edit');
+    } catch (error) {
+      console.error("Error editing post:", error);
+    }
+
   };
 
   const handleDeleteQA = async (qaId) => {
     try {
       await qaApi.deleteQA(qaId);
       // Handle successful deletion
+      navigate('/qas/');
+      setQA({});
     } catch (error) {
       console.error("Error deleting QA:", error);
     }
@@ -100,10 +115,21 @@ const QADetailPage = () => {
   const handleSave = async () => {
     const markdownContent = editorRef.current.getInstance().getMarkdown();
     try {
-      if (editorMode === "edit") {
-        await commentApi.updateCommentForQA(id, cid, markdownContent);
-        const data = await commentApi.getCommentsForQA(id);
-        setComments(data.result);
+      if (editorMode === 'edit') {
+        if (cid) { // 댓글 수정일 경우
+          await commentApi.updateCommentForQA(id, cid, markdownContent);
+          const data = await commentApi.getCommentsForQA(id);
+          setComments(data.result);
+        } else { // 게시물 수정일 경우
+          await qaApi.editQA(qa.qa._id, { content: markdownContent });
+          setQA(prevState => ({
+            ...prevState,
+            qa: {
+              ...prevState.qa,
+              content: markdownContent // 수정된 내용으로 업데이트
+            }
+          }));
+        }
       } else {
         await commentApi.uploadCommentForQA(id, markdownContent);
         const data = await commentApi.getCommentsForQA(id);
@@ -130,10 +156,10 @@ const QADetailPage = () => {
         isAccepted: comment.id === commentId,
       }));
       setComments(updatedComments);
-      localStorage.setItem("selectedCommentId", commentId);
-      const selectedComment = updatedComments.find(
-        (comment) => comment.id === commentId
-      );
+
+      localStorage.setItem(`selectedCommentId_${id}`, commentId);
+      const selectedComment = updatedComments.find(comment => comment.id === commentId);
+
       if (selectedComment) {
         await rankingApi.postScore(5);
         console.log(selectedComment.user.id);
@@ -156,11 +182,11 @@ const QADetailPage = () => {
   }, [comments, selectedCommentId]);
 
   useEffect(() => {
-    const storedCommentId = localStorage.getItem("selectedCommentId");
+    const storedCommentId = localStorage.getItem(`selectedCommentId_${id}`);
     if (storedCommentId) {
       setSelectedCommentId(storedCommentId);
     }
-  }, []);
+  }, [id]);
 
   const allCommentsAccepted = comments.some((comment) => comment.isAccepted);
 
@@ -199,17 +225,19 @@ const QADetailPage = () => {
           </h3>
           <Card
             style={{
-              margin: "20px 0",
-              height: "200px",
-              padding: "20px",
-              borderRadius: "15px",
-              backgroundColor: "#E3EDFF",
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              margin: '20px 20px',
+              padding: '30px 30px',
+              borderRadius: '15px',
+              backgroundColor: '#E3EDFF',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            {/* 글 작성한거 보이는 칸 여기다 */}
-            <h2>{qa.qa.title}</h2>
-            <ReactMarkdown
+            <h4 style={{ fontWeight: 'bold' }}>{qa.qa.title}</h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+
+              <ReactMarkdown
               components={{
                 a: (props) => (
                   <a target="_blank" style={{ color: "red" }} {...props} />
@@ -218,38 +246,27 @@ const QADetailPage = () => {
             >
               {qa.qa.content}
             </ReactMarkdown>
+              <div>
+                <p style={{ fontWeight: 'bold' }}>✏️ {qa.qa.author.nickname} </p>
+              </div>
+            </div>
 
-            <p>작성자: {qa.qa.author.nickname}</p>
-            <div>
-              {shouldShowEditButtons(qa.qa.author._id) && (
-                <Button
-                  onClick={() => handleEditQA(qa.qa.id)}
-                  style={{
-                    marginRight: "10px",
-                    borderColor: "black",
-                    color: "black",
-                    backgroundColor: "white",
-                  }}
-                >
-                  수정
-                </Button>
-              )}
-              {shouldShowEditButtons(qa.qa.author._id) && (
-                <Button
-                  onClick={() => handleDeleteQA(qa.qa.id)}
-                  style={{
-                    borderColor: "black",
-                    color: "black",
-                    backgroundColor: "white",
-                  }}
-                >
-                  삭제
-                </Button>
-              )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+              <div>
+                {shouldShowEditButtons(qa.qa.author._id) && (
+                  <Button onClick={() => handleEditQA(qa.qa._id)} style={{ fontSize: '0.8rem', marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
+                )}
+                {shouldShowEditButtons(qa.qa.author._id) && (
+                  <Button onClick={() => handleDeleteQA(qa.qa._id)} style={{ fontSize: '0.8rem', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
+                )}
+              </div>
+
             </div>
           </Card>
 
-          {(editorMode === "write" || editorMode === "edit") && (
+
+          {(editorMode === 'write' || editorMode === 'edit') && (
             <>
               <h3>
                 {editorMode === "edit" ? "Edit Comment" : "Add your knowledge!"}
@@ -305,73 +322,42 @@ const QADetailPage = () => {
             <Card
               key={index}
               style={{
-                margin: "10px 0",
-                padding: "10px 10px",
-                borderRadius: "15px",
-                backgroundColor: isSelected(comment.id)
-                  ? "#DFF0D8"
-                  : comment.isAccepted
-                  ? "#DFF0D8"
-                  : "#fff",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                display: "flex",
-                flexDirection: "column",
+                margin: '20px 20px',
+                padding: '30px',
+                borderRadius: '15px',
+                backgroundColor: isSelected(comment.id) ? '#DFF0D8' : (comment.isAccepted ? '#DFF0D8' : '#fff'),
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
-              <div style={{ marginBottom: "10px" }}>
-                <ReactMarkdown
-                  components={{
-                    a: (props) => (
-                      <a target="_blank" style={{ color: "red" }} {...props} />
-                    ),
-                  }}
-                >
-                  {comment.content}
-                </ReactMarkdown>
-                <p>작성자: {comment.user.nickname}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <div>
+                  <ReactMarkdown components={{
+                    a: (props) => <a target="_blank" style={{ color: "red" }} {...props} />,
+                  }}>
+                    {comment.content}
+                  </ReactMarkdown>
+                </div>
+                <div>
+                  <p style={{ fontWeight: 'bold' }}>✏️ {comment.user.nickname}</p>
+                </div>
               </div>
 
               <div>
-                {shouldShowEditButtons(comment.user.id) && (
-                  <Button
-                    onClick={() => handleEditComment(comment.id)}
-                    style={{
-                      marginRight: "10px",
-                      borderColor: "black",
-                      color: "black",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    수정
-                  </Button>
-                )}
-                {shouldShowEditButtons(comment.user.id) && (
-                  <Button
-                    onClick={() => handleDeleteComment(comment.id)}
-                    style={{
-                      borderColor: "black",
-                      color: "black",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    삭제
-                  </Button>
-                )}
+                <div>
+                  {shouldShowEditButtons(comment.user.id) && (
+                    <Button onClick={() => handleEditComment(comment.id)} style={{ fontSize: '0.8rem', marginRight: '10px', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>수정</Button>
+                  )}
+                  {shouldShowEditButtons(comment.user.id) && (
+                    <Button onClick={() => handleDeleteComment(comment.id)} style={{ fontSize: '0.8rem', borderColor: 'black', color: 'black', backgroundColor: 'white' }}>삭제</Button>
+                  )}
+                  {shouldShowAcceptButton() && (
+                    <Button onClick={() => handleSelectComment(comment.id)} style={{ borderColor: 'green', color: 'white', backgroundColor: 'green', width: '100px' }}>채택하기</Button>
+                  )}
+                </div>
               </div>
-              {!allCommentsAccepted && (
-                <Button
-                  onClick={() => handleSelectComment(comment.id)}
-                  style={{
-                    alignSelf: "flex-end",
-                    borderColor: "green",
-                    color: "white",
-                    backgroundColor: "green",
-                    width: "100px",
-                  }}
-                >
-                  채택하기
-                </Button>
-              )}
+
             </Card>
           ))}
         </>
