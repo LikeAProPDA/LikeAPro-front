@@ -23,7 +23,7 @@ const PlaygroundDetailPage = () => {
     return (
         <>
             <iframe
-                srcDoc={playground ? toDoc(playground.code, userState?.email) : ''}
+                srcDoc={playground ? toDoc(code, userState?.email, userState?.nickname, isLogin) : ''}
                 sandbox="allow-scripts allow-modals allow-top-navigation allow-same-origin allow-forms"
                 width="100%"
                 style={{
