@@ -17,7 +17,7 @@ const QADetailPage = () => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editorMode, setEditorMode] = useState('none');
-  const [editCommentContent, setEditCommentContent] = useState("");
+  const [editCommentContent, setEditCommentContent] = useState(" ");
   const [sortedComments, setSortedComments] = useState([]);
   const [showEditor, setShowEditor] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
@@ -41,7 +41,9 @@ const QADetailPage = () => {
     const fetchComments = async () => {
       try {
         const data = await commentApi.getCommentsForQA(id);
-        setComments(data.result);
+        // 채택된 댓글을 가장 먼저 정렬하여 저장
+        const sortedData = data.result.sort((a, b) => b.isAccepted - a.isAccepted);
+        setComments(sortedData);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -69,7 +71,6 @@ const QADetailPage = () => {
     const hasAcceptedComment = comments.some(comment => comment.isAccepted);
     return currentUser && currentUser.id === qa.qa.author._id && !hasAcceptedComment;
   };
-
 
   const handleEditQA = async (qaId) => {
     try {
@@ -155,7 +156,6 @@ const QADetailPage = () => {
         isAccepted: comment.id === commentId,
       }));
       setComments(updatedComments);
-      localStorage.setItem(`selectedCommentId_${id}`, commentId);
       const selectedComment = updatedComments.find(comment => comment.id === commentId);
       if (selectedComment) {
         await rankingApi.postScore(5);
@@ -219,11 +219,10 @@ const QADetailPage = () => {
               flexDirection: 'column',
             }}
           >
-            <h4 style={{ fontWeight: 'bold' }}>{qa.qa.title}</h4>
+
+
+            <h2>{qa.qa.title}</h2>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-
-
-              <h2>{qa.qa.title}</h2>
               <ReactMarkdown
                 components={{
                   a: (props) => (
