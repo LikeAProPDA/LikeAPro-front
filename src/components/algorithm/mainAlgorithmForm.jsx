@@ -10,26 +10,27 @@ import { v4 as uuidv4 } from "uuid";
 
 const MainAlgorithmForm = () => {
   const [problems, setProblems] = useState([]);
-  const isLogin = useSelector((state) => state.user.isLogin);
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (isLogin) {
-          const data = await getProblemsUser(2);
-          setProblems(data.result.problems);
+        if (user) {
+          const userData = await getProblemsUser(2);
+          setProblems(userData.result.problems);
         } else {
           const data = await getProblems(2);
           setProblems(data.result);
         }
-
       } catch (error) {
         console.error("Error:", error);
       }
     };
 
-    fetchData();
-  }, [isLogin]);
+    if (user !== undefined && user !== null) {
+      fetchData();
+    }
+  }, [user]);
 
   const checkIsSolved = async (problemNum, problemId) => {
     try {
