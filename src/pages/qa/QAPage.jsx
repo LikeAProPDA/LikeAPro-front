@@ -1,12 +1,5 @@
-import { useEffect, useState } from "react";
-import {
-  Badge,
-  Container,
-  ListGroup,
-  Row,
-  Col,
-  Pagination,
-} from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Badge, Container, ListGroup, Pagination } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import qaApi from "../../lib/apis/qaApi";
 import { useSelector } from "react-redux";

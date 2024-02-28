@@ -7,8 +7,8 @@ import rankingApi from "../../lib/apis/rankingApi";
 import commentApi from '../../lib/apis/commentApi';
 import { Editor } from '../../components/editor';
 import ReactMarkdown from "react-markdown";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
+import '@toast-ui/editor/dist/toastui-editor.css';
+import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 
 const QADetailPage = () => {
   const { id } = useParams();
@@ -16,7 +16,7 @@ const QADetailPage = () => {
   const [qa, setQA] = useState({});
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editorMode, setEditorMode] = useState("none");
+  const [editorMode, setEditorMode] = useState('none');
   const [editCommentContent, setEditCommentContent] = useState("");
   const [sortedComments, setSortedComments] = useState([]);
   const [showEditor, setShowEditor] = useState(false);
@@ -52,7 +52,7 @@ const QADetailPage = () => {
   }, [id]);
 
   useEffect(() => {
-    if (editorMode === "edit") {
+    if (editorMode === 'edit') {
       editorRef.current.getInstance().setHTML(editCommentContent);
     }
   }, [editCommentContent, editorMode]);
@@ -81,7 +81,6 @@ const QADetailPage = () => {
 
   };
 
-
   const handleDeleteQA = async (qaId) => {
     try {
       await qaApi.deleteQA(qaId);
@@ -94,11 +93,11 @@ const QADetailPage = () => {
   };
 
   const handleEditComment = async (commentId) => {
-    const commentToEdit = comments.find((comment) => comment.id === commentId);
+    const commentToEdit = comments.find(comment => comment.id === commentId);
     if (commentToEdit && commentToEdit.content) {
       setEditCommentContent(commentToEdit.content);
       setCid(commentId);
-      setEditorMode("edit");
+      setEditorMode('edit');
     } else {
       console.error("Comment not found or does not have content");
     }
@@ -136,7 +135,7 @@ const QADetailPage = () => {
         const data = await commentApi.getCommentsForQA(id);
         setComments(data.result);
       }
-      setEditorMode("none");
+      setEditorMode('none');
       setShowEditor(false);
     } catch (error) {
       console.error("Error saving comment:", error);
@@ -144,14 +143,13 @@ const QADetailPage = () => {
   };
 
   const handleCancel = () => {
-    setEditorMode("none");
+    setEditorMode('none');
     setShowEditor(false);
   };
 
   const handleSelectComment = async (commentId) => {
     setSelectedCommentId(commentId);
     try {
-      await commentApi.updateCommentAcceptance(id, commentId, true);
       await commentApi.updateCommentAcceptance(id, commentId, true);
       const updatedComments = comments.map(comment => ({
         ...comment,
@@ -174,13 +172,11 @@ const QADetailPage = () => {
   const isSelected = (commentId) => commentId === selectedCommentId;
 
   useEffect(() => {
-    setSortedComments(
-      [...comments].sort((a, b) => {
-        if (a.id === selectedCommentId) return -1;
-        if (b.id === selectedCommentId) return 1;
-        return 0;
-      })
-    );
+    setSortedComments([...comments].sort((a, b) => {
+      if (a.id === selectedCommentId) return -1;
+      if (b.id === selectedCommentId) return 1;
+      return 0;
+    }));
   }, [comments, selectedCommentId]);
 
   useEffect(() => {
@@ -190,7 +186,7 @@ const QADetailPage = () => {
     }
   }, [id]);
 
-  const allCommentsAccepted = comments.some((comment) => comment.isAccepted);
+  const allCommentsAccepted = comments.some(comment => comment.isAccepted);
 
   return (
     <Container>
@@ -199,19 +195,9 @@ const QADetailPage = () => {
         <div>Loading...</div>
       ) : (
         <>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            {editorMode === "none" && (
-              <Button
-                onClick={() => setEditorMode("write")}
-                style={{
-                  marginRight: "10px",
-                  borderColor: "blue",
-                  color: "blue",
-                  backgroundColor: "transparent",
-                }}
-              >
-                글 작성하기
-              </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {editorMode === 'none' && (
+              <Button onClick={() => setEditorMode('write')} style={{ marginRight: '10px', borderColor: 'blue', color: 'blue', backgroundColor: 'transparent' }}>글 작성하기</Button>
             )}
           </div>
           <h3
@@ -270,9 +256,7 @@ const QADetailPage = () => {
 
           {(editorMode === 'write' || editorMode === 'edit') && (
             <>
-              <h3>
-                {editorMode === "edit" ? "Edit Comment" : "Add your knowledge!"}
-              </h3>
+              <h3>{editorMode === 'edit' ? 'Edit Comment' : 'Add your knowledge!'}</h3>
 
               <Editor
                 ref={editorRef}
@@ -280,7 +264,7 @@ const QADetailPage = () => {
                 placeholder="Please Enter Text."
                 initialValue={editCommentContent}
                 theme="dark"
-                previewStyle="vertical"
+                previewStyle='vertical'
                 onChange={handleEditorChange}
               />
 
