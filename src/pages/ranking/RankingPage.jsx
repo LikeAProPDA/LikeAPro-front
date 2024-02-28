@@ -145,6 +145,7 @@ const RankingPage = () => {
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}
       >
+        {console.log(totalCount / itemsPerPage)}
         <Pagination className="mt-3">
           {Array.from({ length: Math.ceil(totalCount / itemsPerPage) }).map(
             (_, index) => (
