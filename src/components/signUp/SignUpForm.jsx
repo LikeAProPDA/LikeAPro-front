@@ -24,6 +24,7 @@ const SignUpForm = () => {
 
     const handleSubmit = useCallback(async (event, nickname, email, password, backjoonId, signUpState) => {
         event.preventDefault();
+        console.log(signUpState);
         if (
             signUpState.isVerifyNickname &&
             signUpState.isVerifyEmail &&
@@ -33,6 +34,7 @@ const SignUpForm = () => {
             dispatch(clear());
             try {
                 await signUp(nickname, email, password, backjoonId);
+
                 navigate('/');
             } catch (err) {
                 setSignUpAlert(true);
