@@ -34,7 +34,7 @@ const PasswordForm = ({ password, setPassword, checkPassword, setCheckPassword }
                     value={checkPassword}
                     onChange={(e) => {
                         setCheckPassword(e.target.value);
-                        if (e.target.value >= 8 && e.target.value.length !== 0 && e.target.value === password) {
+                        if (e.target.value.length > 0 && password === e.target.value) {
                             dispatch(setIsVerifyPassword(true));
                         } else {
                             dispatch(setIsVerifyPassword(false));
